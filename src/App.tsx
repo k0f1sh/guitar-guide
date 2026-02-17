@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import type { NoteName } from './data/notes';
 import type { CagedForm } from './data/chords';
+import { CHORD_VOICINGS } from './data/chords';
 import { SCALES } from './data/scales';
-import { getScaleNotes } from './utils/music';
+import { getScaleNotes, transposeCagedForm } from './utils/music';
 import type { NoteLabel } from './utils/music';
 import Header from './components/Header';
 import ControlPanel from './components/ControlPanel';
 import Fretboard from './components/Fretboard';
 import ChordDiagram from './components/ChordDiagram';
+import PlaybackControls from './components/PlaybackControls';
 
 type Mode = 'scale' | 'chord';
 
@@ -18,9 +20,17 @@ export default function App() {
   const [chordType, setChordType] = useState('major');
   const [cagedForm, setCagedForm] = useState<CagedForm | null>(null);
   const [labelMode, setLabelMode] = useState<NoteLabel>('note');
+  const [volume, setVolume] = useState(0.5);
 
   const scale = SCALES[scaleIndex];
   const highlightedNotes = getScaleNotes(root, scale.intervals);
+
+  // コード音再生用の frets 配列を取得
+  const chordFrets = mode === 'chord'
+    ? cagedForm
+      ? transposeCagedForm(cagedForm, chordType, root)?.frets ?? null
+      : CHORD_VOICINGS[`${root}-${chordType}`]?.frets ?? null
+    : null;
 
   const title = mode === 'scale'
     ? scale.name
@@ -54,6 +64,13 @@ export default function App() {
               chordType={chordType}
               labelMode={labelMode}
               cagedForm={cagedForm}
+            />
+          )}
+          {chordFrets && (
+            <PlaybackControls
+              frets={chordFrets}
+              volume={volume}
+              onVolumeChange={setVolume}
             />
           )}
         </div>
