@@ -61,7 +61,7 @@ export default function App() {
 
       {/* Control panel - 下側・max-width で中央寄せ */}
       <section className="w-full px-4 py-4">
-        <div className="max-w-2xl mx-auto">
+        <div>
           <ControlPanel
             mode={mode}
             onModeChange={setMode}

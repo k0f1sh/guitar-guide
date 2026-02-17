@@ -11,20 +11,20 @@ export interface ChordType {
 }
 
 export const CHORD_TYPES: ChordType[] = [
-  { suffix: 'major', label: 'メジャー' },
-  { suffix: 'minor', label: 'マイナー' },
-  { suffix: '7', label: 'セブンス (7)' },
-  { suffix: 'm7', label: 'マイナーセブンス (m7)' },
-  { suffix: 'maj7', label: 'メジャーセブンス (maj7)' },
-  { suffix: 'dim', label: 'ディミニッシュ (dim)' },
-  { suffix: 'aug', label: 'オーギュメント (aug)' },
-  { suffix: 'sus4', label: 'サスフォー (sus4)' },
-  { suffix: 'sus2', label: 'サスツー (sus2)' },
-  { suffix: '7sus4', label: 'セブンサスフォー (7sus4)' },
-  { suffix: 'dim7', label: 'ディミニッシュセブンス (dim7)' },
-  { suffix: 'm7b5', label: 'ハーフディミニッシュ (m7b5)' },
-  { suffix: 'add9', label: 'アドナインス (add9)' },
-  { suffix: '9', label: 'ナインス (9)' },
+  { suffix: 'major', label: 'major' },
+  { suffix: 'minor', label: 'minor' },
+  { suffix: '7', label: '7' },
+  { suffix: 'm7', label: 'm7' },
+  { suffix: 'maj7', label: 'maj7' },
+  { suffix: 'dim', label: 'dim' },
+  { suffix: 'aug', label: 'aug' },
+  { suffix: 'sus4', label: 'sus4' },
+  { suffix: 'sus2', label: 'sus2' },
+  { suffix: '7sus4', label: '7sus4' },
+  { suffix: 'dim7', label: 'dim7' },
+  { suffix: 'm7b5', label: 'm7b5' },
+  { suffix: 'add9', label: 'add9' },
+  { suffix: '9', label: '9' },
 ];
 
 // ── CAGED system ──

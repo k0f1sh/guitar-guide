@@ -62,16 +62,16 @@ export default function Fretboard({
     >
       <defs>
         <linearGradient id="grad-root" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#F87171" />
-          <stop offset="100%" stopColor="#EF4444" />
+          <stop offset="0%" stopColor="#FCA5A5" />
+          <stop offset="100%" stopColor="#FDA4AF" />
         </linearGradient>
         <linearGradient id="grad-scale" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#818CF8" />
-          <stop offset="100%" stopColor="#6366F1" />
+          <stop offset="0%" stopColor="#A5B4FC" />
+          <stop offset="100%" stopColor="#C4B5FD" />
         </linearGradient>
         <linearGradient id="grad-chord" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#6EE7B7" />
-          <stop offset="100%" stopColor="#34D399" />
+          <stop offset="0%" stopColor="#A7F3D0" />
+          <stop offset="100%" stopColor="#6EE7B7" />
         </linearGradient>
         <linearGradient id="wood" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" stopColor="#A0714F" />

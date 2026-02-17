@@ -45,21 +45,18 @@ export default function FretboardNote({
   return (
     <g>
       {/* Shadow */}
-      <circle cx={x} cy={y + 2} r={16} fill="rgba(0,0,0,0.2)" />
+      <circle cx={x} cy={y + 2} r={16} fill="rgba(0,0,0,0.1)" />
       {/* Main circle */}
-      <circle cx={x} cy={y} r={16} fill={`url(#${gradientId})`} stroke="rgba(255,255,255,0.3)" strokeWidth={1} />
+      <circle cx={x} cy={y} r={16} fill={`url(#${gradientId})`} stroke="rgba(255,255,255,0.5)" strokeWidth={1} />
       <text
         x={x}
         y={y}
         textAnchor="middle"
         dominantBaseline="central"
-        fill="white"
-        fontSize={label.length > 2 ? 11 : 14}
+        fill="#1e293b"
+        fontSize={label.length > 2 ? 16 : 21}
         fontWeight="800"
         fontFamily="Inter, system-ui, sans-serif"
-        stroke="rgba(0,0,0,0.3)"
-        strokeWidth={0.5}
-        paintOrder="stroke"
       >
         {label}
       </text>
