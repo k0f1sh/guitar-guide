@@ -9,7 +9,7 @@ export default function Header() {
         </div>
         <div>
           <h1 className="text-2xl font-extrabold tracking-tight">
-            <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Guitar Learn</span>
+            <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Guitar Guide</span>
           </h1>
           <p className="text-sm text-slate-400 font-bold -mt-0.5">ギター学習ツール</p>
         </div>
