@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { NoteName } from './data/notes';
+import type { CagedForm } from './data/chords';
 import { SCALES } from './data/scales';
 import { getScaleNotes } from './utils/music';
 import type { NoteLabel } from './utils/music';
@@ -15,10 +16,17 @@ export default function App() {
   const [root, setRoot] = useState<NoteName>('C');
   const [scaleIndex, setScaleIndex] = useState(0);
   const [chordType, setChordType] = useState('major');
+  const [cagedForm, setCagedForm] = useState<CagedForm | null>(null);
   const [labelMode, setLabelMode] = useState<NoteLabel>('note');
 
   const scale = SCALES[scaleIndex];
   const highlightedNotes = getScaleNotes(root, scale.intervals);
+
+  const title = mode === 'scale'
+    ? scale.name
+    : cagedForm
+      ? `${chordType} - ${cagedForm} フォーム`
+      : chordType;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -31,7 +39,7 @@ export default function App() {
             <span className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-base font-extrabold">
               {root}
             </span>
-            {mode === 'scale' ? scale.name : chordType}
+            {title}
           </h2>
           {mode === 'scale' ? (
             <Fretboard
@@ -41,7 +49,12 @@ export default function App() {
               labelMode={labelMode}
             />
           ) : (
-            <ChordDiagram root={root} chordType={chordType} labelMode={labelMode} />
+            <ChordDiagram
+              root={root}
+              chordType={chordType}
+              labelMode={labelMode}
+              cagedForm={cagedForm}
+            />
           )}
         </div>
       </section>
@@ -58,6 +71,8 @@ export default function App() {
             onScaleChange={setScaleIndex}
             chordType={chordType}
             onChordTypeChange={setChordType}
+            cagedForm={cagedForm}
+            onCagedFormChange={setCagedForm}
             labelMode={labelMode}
             onLabelModeChange={setLabelMode}
           />

@@ -1,6 +1,7 @@
 import { NOTE_NAMES, type NoteName } from '../data/notes';
 import { SCALES } from '../data/scales';
-import { CHORD_TYPES } from '../data/chords';
+import { CHORD_TYPES, CAGED_FORMS } from '../data/chords';
+import type { CagedForm } from '../data/chords';
 import type { NoteLabel } from '../utils/music';
 
 type Mode = 'scale' | 'chord';
@@ -20,6 +21,8 @@ interface ControlPanelProps {
   onScaleChange: (index: number) => void;
   chordType: string;
   onChordTypeChange: (type: string) => void;
+  cagedForm: CagedForm | null;
+  onCagedFormChange: (form: CagedForm | null) => void;
   labelMode: NoteLabel;
   onLabelModeChange: (mode: NoteLabel) => void;
 }
@@ -33,6 +36,8 @@ export default function ControlPanel({
   onScaleChange,
   chordType,
   onChordTypeChange,
+  cagedForm,
+  onCagedFormChange,
   labelMode,
   onLabelModeChange,
 }: ControlPanelProps) {
@@ -90,35 +95,66 @@ export default function ControlPanel({
           <label className="block text-sm font-extrabold text-slate-400 uppercase tracking-wider mb-3">
             スケール
           </label>
-          <select
-            value={scaleIndex}
-            onChange={(e) => onScaleChange(Number(e.target.value))}
-            className="w-full bg-slate-50 text-slate-700 rounded-xl px-4 py-3.5 text-base border border-slate-200 font-bold focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 focus:outline-none transition-all appearance-none cursor-pointer"
-          >
+          <div className="flex flex-wrap gap-2">
             {SCALES.map((scale, i) => (
-              <option key={scale.name} value={i}>
+              <button
+                key={scale.name}
+                className={`px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 ${
+                  scaleIndex === i
+                    ? 'bg-gradient-to-r from-indigo-500 to-blue-600 text-white shadow-md shadow-indigo-200 scale-[1.02]'
+                    : 'bg-slate-50 text-slate-600 border border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-600 active:scale-95'
+                }`}
+                onClick={() => onScaleChange(i)}
+              >
                 {scale.name}
-              </option>
+              </button>
             ))}
-          </select>
+          </div>
         </div>
       ) : (
-        <div>
-          <label className="block text-sm font-extrabold text-slate-400 uppercase tracking-wider mb-3">
-            コードタイプ
-          </label>
-          <select
-            value={chordType}
-            onChange={(e) => onChordTypeChange(e.target.value)}
-            className="w-full bg-slate-50 text-slate-700 rounded-xl px-4 py-3.5 text-base border border-slate-200 font-bold focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 focus:outline-none transition-all appearance-none cursor-pointer"
-          >
-            {CHORD_TYPES.map((ct) => (
-              <option key={ct.suffix} value={ct.suffix}>
-                {ct.label}
-              </option>
-            ))}
-          </select>
-        </div>
+        <>
+          <div>
+            <label className="block text-sm font-extrabold text-slate-400 uppercase tracking-wider mb-3">
+              コードタイプ
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {CHORD_TYPES.map((ct) => (
+                <button
+                  key={ct.suffix}
+                  className={`px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 ${
+                    chordType === ct.suffix
+                      ? 'bg-gradient-to-r from-indigo-500 to-blue-600 text-white shadow-md shadow-indigo-200 scale-[1.02]'
+                      : 'bg-slate-50 text-slate-600 border border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-600 active:scale-95'
+                  }`}
+                  onClick={() => onChordTypeChange(ct.suffix)}
+                >
+                  {ct.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-extrabold text-slate-400 uppercase tracking-wider mb-3">
+              CAGED フォーム
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {CAGED_FORMS.map((form) => (
+                <button
+                  key={form}
+                  className={`px-5 py-2.5 rounded-xl text-base font-extrabold transition-all duration-200 ${
+                    cagedForm === form
+                      ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md shadow-amber-200 scale-[1.02]'
+                      : 'bg-slate-50 text-slate-600 border border-slate-200 hover:border-amber-300 hover:bg-amber-50 hover:text-amber-600 active:scale-95'
+                  }`}
+                  onClick={() => onCagedFormChange(cagedForm === form ? null : form)}
+                >
+                  {form} フォーム
+                </button>
+              ))}
+            </div>
+          </div>
+        </>
       )}
 
       {/* Label mode */}
@@ -149,16 +185,24 @@ export default function ControlPanel({
         {mode === 'scale' ? (
           <div className="flex flex-wrap gap-4 text-base font-bold text-slate-600">
             <span className="flex items-center gap-2">
-              <span className="w-5 h-5 rounded-full bg-gradient-to-br from-red-600 to-red-900 inline-block" />
+              <span className="w-5 h-5 rounded-full bg-gradient-to-br from-red-400 to-red-500 inline-block" />
               ルート音
             </span>
             <span className="flex items-center gap-2">
-              <span className="w-5 h-5 rounded-full bg-gradient-to-br from-indigo-700 to-indigo-950 inline-block" />
+              <span className="w-5 h-5 rounded-full bg-gradient-to-br from-indigo-400 to-indigo-500 inline-block" />
               スケール音
             </span>
           </div>
         ) : (
           <div className="flex flex-wrap gap-4 text-base font-bold text-slate-600">
+            <span className="flex items-center gap-2">
+              <span className="w-5 h-5 rounded-full bg-gradient-to-br from-red-400 to-red-500 inline-block" />
+              ルート音
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="w-5 h-5 rounded-full bg-gradient-to-br from-emerald-300 to-emerald-400 inline-block" />
+              コード音
+            </span>
             <span className="flex items-center gap-2">
               <span className="text-rose-500 font-extrabold text-lg">×</span>
               ミュート
@@ -166,10 +210,6 @@ export default function ControlPanel({
             <span className="flex items-center gap-2">
               <span className="w-5 h-5 rounded-full border-2 border-slate-400 inline-block" />
               開放弦
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="w-5 h-5 rounded-full bg-gradient-to-br from-emerald-600 to-emerald-900 inline-block" />
-              押さえる
             </span>
           </div>
         )}

@@ -1,4 +1,6 @@
 import { NOTE_NAMES, type NoteName, STANDARD_TUNING } from '../data/notes';
+import { CAGED_SHAPES, type CagedForm } from '../data/chords';
+import type { ChordVoicing } from '../data/chords';
 
 export type NoteLabel = 'note' | 'finger' | 'degree';
 
@@ -49,4 +51,35 @@ const DEGREE_NAMES: Record<number, string> = {
 export function getDegreeName(root: NoteName, note: NoteName): string {
   const interval = (getNoteIndex(note) - getNoteIndex(root) + 12) % 12;
   return DEGREE_NAMES[interval];
+}
+
+/**
+ * CAGED フォーム + コードタイプを指定ルートに移調する
+ * 該当するフォーム×タイプの基準シェイプから目標ルートへシフト
+ * 対応シェイプがない場合は null を返す
+ */
+export function transposeCagedForm(
+  form: CagedForm,
+  chordType: string,
+  targetRoot: NoteName,
+): ChordVoicing | null {
+  const shapeKey = `${form}-${chordType}`;
+  const shape = CAGED_SHAPES[shapeKey];
+  if (!shape) return null;
+
+  const baseIndex = getNoteIndex(shape.baseRoot as NoteName);
+  const targetIndex = getNoteIndex(targetRoot);
+  const shift = (targetIndex - baseIndex + 12) % 12;
+
+  if (shift === 0) {
+    return { frets: [...shape.frets], fingers: [...shape.fingers] };
+  }
+
+  const frets = shape.frets.map((f) => (f === -1 ? -1 : f + shift));
+  const fingers = shape.fingers.map((f, i) => {
+    if (shape.frets[i] === -1) return 0;
+    return f;
+  });
+
+  return { frets, fingers };
 }
