@@ -85,6 +85,7 @@ export function transposeCagedForm(
   const frets = shape.frets.map((f) => (f === -1 ? -1 : f + shift));
   const fingers = shape.fingers.map((f, i) => {
     if (shape.frets[i] === -1) return 0;
+    if (shape.frets[i] === 0) return 1; // was open, now barre'd by index finger
     return f;
   });
 

@@ -200,6 +200,9 @@ export default function ControlPanel({
                 </button>
               ))}
             </div>
+            {labelMode === 'finger' && (
+              <p className="text-xs text-slate-400 mt-1">※ 指番号は正確でない場合があります</p>
+            )}
           </div>
 
           {mode === 'chord' && (
