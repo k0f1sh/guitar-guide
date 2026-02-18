@@ -1,9 +1,38 @@
 import { CHORD_VOICINGS } from '../data/chords';
 import type { CagedForm } from '../data/chords';
-import type { NoteName } from '../data/notes';
+import { STANDARD_TUNING, type NoteName } from '../data/notes';
 import type { NoteLabel } from '../utils/music';
-import { transposeCagedForm } from '../utils/music';
+import { transposeCagedForm, getNoteAtFret, getNoteIndex, getDegreeName } from '../utils/music';
 import Fretboard from './Fretboard';
+
+function getChordNotesSorted(frets: number[], root: NoteName): NoteName[] {
+  const tuning = [...STANDARD_TUNING].reverse(); // frets は 6→1 順、STANDARD_TUNING は 1→6 順なので反転
+  const notes = frets
+    .map((fret, i) => fret >= 0 ? getNoteAtFret(tuning[i], fret) : null)
+    .filter((n): n is NoteName => n !== null);
+  const unique = [...new Set(notes)];
+  const rootIdx = getNoteIndex(root);
+  unique.sort((a, b) => (getNoteIndex(a) - rootIdx + 12) % 12 - (getNoteIndex(b) - rootIdx + 12) % 12);
+  return unique;
+}
+
+function ChordNotes({ frets, root }: { frets: number[]; root: NoteName }) {
+  const notes = getChordNotesSorted(frets, root);
+  return (
+    <div className="flex flex-wrap items-center gap-2 mb-3">
+      <span className="text-xs font-extrabold text-slate-400 uppercase tracking-wider">構成音</span>
+      {notes.map((note) => (
+        <div
+          key={note}
+          className={`flex flex-col items-center px-3 py-1.5 rounded-lg ${note === root ? 'bg-rose-100 text-rose-700' : 'bg-slate-100 text-slate-600'}`}
+        >
+          <span className="font-extrabold text-base leading-tight">{note}</span>
+          <span className="text-xs font-bold opacity-60">{getDegreeName(root, note)}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 interface ChordDiagramProps {
   root: NoteName;
@@ -29,14 +58,17 @@ export default function ChordDiagram({ root, chordType, labelMode, cagedForm }: 
       );
     }
     return (
-      <Fretboard
-        root={root}
-        highlightedNotes={[]}
-        mode="chord"
-        labelMode={labelMode}
-        chordFrets={voicing.frets}
-        chordFingers={voicing.fingers}
-      />
+      <>
+        <ChordNotes frets={voicing.frets} root={root} />
+        <Fretboard
+          root={root}
+          highlightedNotes={[]}
+          mode="chord"
+          labelMode={labelMode}
+          chordFrets={voicing.frets}
+          chordFingers={voicing.fingers}
+        />
+      </>
     );
   }
 
@@ -58,13 +90,16 @@ export default function ChordDiagram({ root, chordType, labelMode, cagedForm }: 
   }
 
   return (
-    <Fretboard
-      root={root}
-      highlightedNotes={[]}
-      mode="chord"
-      labelMode={labelMode}
-      chordFrets={voicing.frets}
-      chordFingers={voicing.fingers}
-    />
+    <>
+      <ChordNotes frets={voicing.frets} root={root} />
+      <Fretboard
+        root={root}
+        highlightedNotes={[]}
+        mode="chord"
+        labelMode={labelMode}
+        chordFrets={voicing.frets}
+        chordFingers={voicing.fingers}
+      />
+    </>
   );
 }
