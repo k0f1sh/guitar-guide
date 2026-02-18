@@ -41,8 +41,10 @@ export default function ControlPanel({
   labelMode,
   onLabelModeChange,
 }: ControlPanelProps) {
+  const inactiveBtn = 'bg-slate-50 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600 hover:border-indigo-300 dark:hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 hover:text-indigo-600 dark:hover:text-indigo-400 active:scale-95';
+
   return (
-    <div className="bg-white rounded-2xl shadow-lg shadow-slate-200/50 p-5 border border-slate-100">
+    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-slate-900/50 p-5 border border-slate-100 dark:border-slate-700">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
 
         {/* Col 1: モード + ルート音 */}
@@ -52,7 +54,7 @@ export default function ControlPanel({
               className={`flex-1 py-3.5 px-4 rounded-xl text-base font-extrabold transition-all duration-200 ${
                 mode === 'scale'
                   ? 'bg-gradient-to-r from-indigo-500 to-indigo-600 text-white shadow-lg shadow-indigo-200'
-                  : 'bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-700'
+                  : 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-600 hover:text-slate-700 dark:hover:text-slate-200'
               }`}
               onClick={() => onModeChange('scale')}
             >
@@ -62,7 +64,7 @@ export default function ControlPanel({
               className={`flex-1 py-3.5 px-4 rounded-xl text-base font-extrabold transition-all duration-200 ${
                 mode === 'chord'
                   ? 'bg-gradient-to-r from-indigo-500 to-indigo-600 text-white shadow-lg shadow-indigo-200'
-                  : 'bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-700'
+                  : 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-600 hover:text-slate-700 dark:hover:text-slate-200'
               }`}
               onClick={() => onModeChange('chord')}
             >
@@ -71,7 +73,7 @@ export default function ControlPanel({
           </div>
 
           <div>
-            <label className="block text-xs font-extrabold text-slate-400 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">
               ルート音
             </label>
             <div className="grid grid-cols-6 gap-1.5">
@@ -81,7 +83,7 @@ export default function ControlPanel({
                   className={`py-3 rounded-xl text-base font-extrabold transition-all duration-200 ${
                     root === note
                       ? 'bg-gradient-to-br from-rose-500 to-pink-600 text-white shadow-md shadow-rose-200 scale-105'
-                      : 'bg-slate-50 text-slate-600 border border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-600 active:scale-95'
+                      : inactiveBtn
                   }`}
                   onClick={() => onRootChange(note)}
                 >
@@ -96,7 +98,7 @@ export default function ControlPanel({
         <div>
           {mode === 'scale' ? (
             <>
-              <label className="block text-xs font-extrabold text-slate-400 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">
                 スケール
               </label>
               <div className="flex flex-wrap gap-1.5">
@@ -106,7 +108,7 @@ export default function ControlPanel({
                     className={`px-4 py-3 rounded-xl text-base font-bold transition-all duration-200 ${
                       scaleIndex === i
                         ? 'bg-gradient-to-r from-indigo-500 to-blue-600 text-white shadow-md shadow-indigo-200'
-                        : 'bg-slate-50 text-slate-600 border border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-600 active:scale-95'
+                        : inactiveBtn
                     }`}
                     onClick={() => onScaleChange(i)}
                   >
@@ -117,7 +119,7 @@ export default function ControlPanel({
             </>
           ) : (
             <>
-              <label className="block text-xs font-extrabold text-slate-400 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">
                 コードタイプ
               </label>
               <div className="grid grid-cols-3 gap-1.5">
@@ -127,7 +129,7 @@ export default function ControlPanel({
                     className={`py-3 rounded-xl text-base font-bold transition-all duration-200 ${
                       chordType === ct.suffix
                         ? 'bg-gradient-to-r from-indigo-500 to-blue-600 text-white shadow-md shadow-indigo-200'
-                        : 'bg-slate-50 text-slate-600 border border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-600 active:scale-95'
+                        : inactiveBtn
                     }`}
                     onClick={() => onChordTypeChange(ct.suffix)}
                   >
@@ -143,7 +145,7 @@ export default function ControlPanel({
         <div>
           {mode === 'chord' ? (
             <>
-              <label className="block text-xs font-extrabold text-slate-400 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">
                 CAGED フォーム
               </label>
               <div className="grid grid-cols-3 gap-1.5">
@@ -153,7 +155,7 @@ export default function ControlPanel({
                     className={`py-3 rounded-xl text-base font-extrabold transition-all duration-200 ${
                       cagedForm === form
                         ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md shadow-amber-200'
-                        : 'bg-slate-50 text-slate-600 border border-slate-200 hover:border-amber-300 hover:bg-amber-50 hover:text-amber-600 active:scale-95'
+                        : 'bg-slate-50 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600 hover:border-amber-300 dark:hover:border-amber-500 hover:bg-amber-50 dark:hover:bg-amber-900/30 hover:text-amber-600 dark:hover:text-amber-400 active:scale-95'
                     }`}
                     onClick={() => onCagedFormChange(cagedForm === form ? null : form)}
                   >
@@ -163,9 +165,9 @@ export default function ControlPanel({
               </div>
             </>
           ) : (
-            <div className="bg-slate-50 rounded-xl p-3">
-              <p className="text-xs font-extrabold text-slate-400 uppercase tracking-wider mb-2">凡例</p>
-              <div className="flex flex-wrap gap-3 text-sm font-bold text-slate-600">
+            <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-3">
+              <p className="text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">凡例</p>
+              <div className="flex flex-wrap gap-3 text-sm font-bold text-slate-600 dark:text-slate-300">
                 <span className="flex items-center gap-1.5">
                   <span className="w-4 h-4 rounded-full bg-gradient-to-br from-red-400 to-red-500 inline-block" />
                   ルート音
@@ -182,7 +184,7 @@ export default function ControlPanel({
         {/* Col 4: 表示切替 + 凡例(コード時) */}
         <div className="space-y-3">
           <div>
-            <label className="block text-xs font-extrabold text-slate-400 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">
               表示
             </label>
             <div className="flex gap-1.5">
@@ -192,7 +194,7 @@ export default function ControlPanel({
                   className={`flex-1 py-3 rounded-xl text-base font-extrabold transition-all duration-200 ${
                     labelMode === opt.value
                       ? 'bg-gradient-to-r from-slate-700 to-slate-800 text-white shadow-md'
-                      : 'bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-700'
+                      : 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-600 hover:text-slate-700 dark:hover:text-slate-200'
                   }`}
                   onClick={() => onLabelModeChange(opt.value)}
                 >
@@ -201,14 +203,14 @@ export default function ControlPanel({
               ))}
             </div>
             {labelMode === 'finger' && (
-              <p className="text-xs text-slate-400 mt-1">※ 指番号は正確でない場合があります</p>
+              <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">※ 指番号は正確でない場合があります</p>
             )}
           </div>
 
           {mode === 'chord' && (
-            <div className="bg-slate-50 rounded-xl p-3">
-              <p className="text-xs font-extrabold text-slate-400 uppercase tracking-wider mb-2">凡例</p>
-              <div className="flex flex-wrap gap-3 text-sm font-bold text-slate-600">
+            <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-3">
+              <p className="text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">凡例</p>
+              <div className="flex flex-wrap gap-3 text-sm font-bold text-slate-600 dark:text-slate-300">
                 <span className="flex items-center gap-1.5">
                   <span className="w-4 h-4 rounded-full bg-gradient-to-br from-red-400 to-red-500 inline-block" />
                   ルート
@@ -222,7 +224,7 @@ export default function ControlPanel({
                   ミュート
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <span className="w-4 h-4 rounded-full border-2 border-slate-400 inline-block" />
+                  <span className="w-4 h-4 rounded-full border-2 border-slate-400 dark:border-slate-500 inline-block" />
                   開放弦
                 </span>
               </div>

@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: "Inter", system-ui, sans-serif;
   --color-fretboard: #5C3317;
@@ -10,4 +12,92 @@
 body {
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%);
   min-height: 100vh;
+}
+
+.dark body {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+}
+
+/* Fretboard: light mode */
+:root {
+  --fb-wood-1: #A0714F;
+  --fb-wood-2: #8B6240;
+  --fb-wood-3: #7A5635;
+  --fb-nut: #F5F0E8;
+  --fb-nut-stroke: #D4C9B8;
+  --fb-fret-wire: #B0B0B0;
+  --fb-inlay: #E8DDD0;
+  --fb-string-hi: #E8D8C4;
+  --fb-string-lo: #C0A882;
+  --fb-fret-num: #334155;
+  --fb-open-stroke: #64748B;
+  --fb-shadow-color: #1e293b;
+  --fb-note-text: #1e293b;
+  --fb-grad-root-1: #FCA5A5;
+  --fb-grad-root-2: #FDA4AF;
+  --fb-grad-scale-1: #A5B4FC;
+  --fb-grad-scale-2: #C4B5FD;
+  --fb-grad-chord-1: #A7F3D0;
+  --fb-grad-chord-2: #6EE7B7;
+}
+
+/* Fretboard: dark mode */
+.dark {
+  --fb-wood-1: #2c1a0e;
+  --fb-wood-2: #1e1107;
+  --fb-wood-3: #160d04;
+  --fb-nut: #3d2b1a;
+  --fb-nut-stroke: #4d3824;
+  --fb-fret-wire: #666666;
+  --fb-inlay: #3d3028;
+  --fb-string-hi: #5c4535;
+  --fb-string-lo: #3d2b1a;
+  --fb-fret-num: #94a3b8;
+  --fb-open-stroke: #94a3b8;
+  --fb-shadow-color: #000000;
+  --fb-note-text: #f8fafc;
+  --fb-grad-root-1: #f43f5e;
+  --fb-grad-root-2: #be123c;
+  --fb-grad-scale-1: #6366f1;
+  --fb-grad-scale-2: #7c3aed;
+  --fb-grad-chord-1: #10b981;
+  --fb-grad-chord-2: #047857;
+}
+
+/* Circle of Fifths: light mode */
+:root {
+  --cof-major-default: #F1F5F9;
+  --cof-major-hover: #E2E8F0;
+  --cof-minor-default: #EEF2FF;
+  --cof-minor-hover: #E0E7FF;
+  --cof-stroke: white;
+  --cof-text-major: #334155;
+  --cof-text-major-sel: #9f1239;
+  --cof-text-sig: #64748b;
+  --cof-text-sig-sel: #be123c;
+  --cof-text-minor: #4338ca;
+  --cof-text-minor-sel: #3730a3;
+  --cof-center-bg: white;
+  --cof-center-stroke: #E2E8F0;
+  --cof-center-root: #be123c;
+  --cof-center-sig: #64748b;
+}
+
+/* Circle of Fifths: dark mode */
+.dark {
+  --cof-major-default: #475569;
+  --cof-major-hover: #64748b;
+  --cof-minor-default: #312e81;
+  --cof-minor-hover: #3730a3;
+  --cof-stroke: #0f172a;
+  --cof-text-major: #e2e8f0;
+  --cof-text-major-sel: #9f1239;
+  --cof-text-sig: #94a3b8;
+  --cof-text-sig-sel: #be123c;
+  --cof-text-minor: #a5b4fc;
+  --cof-text-minor-sel: #3730a3;
+  --cof-center-bg: #1e293b;
+  --cof-center-stroke: #475569;
+  --cof-center-root: #fb7185;
+  --cof-center-sig: #94a3b8;
 }

@@ -20,11 +20,11 @@ function ChordNotes({ frets, root }: { frets: number[]; root: NoteName }) {
   const notes = getChordNotesSorted(frets, root);
   return (
     <div className="flex flex-wrap items-center gap-2 mb-3">
-      <span className="text-xs font-extrabold text-slate-400 uppercase tracking-wider">構成音</span>
+      <span className="text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider">構成音</span>
       {notes.map((note) => (
         <div
           key={note}
-          className={`flex flex-col items-center px-3 py-1.5 rounded-lg ${note === root ? 'bg-rose-100 text-rose-700' : 'bg-slate-100 text-slate-600'}`}
+          className={`flex flex-col items-center px-3 py-1.5 rounded-lg ${note === root ? 'bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}
         >
           <span className="font-extrabold text-base leading-tight">{note}</span>
           <span className="text-xs font-bold opacity-60">{getDegreeName(root, note)}</span>
@@ -56,8 +56,8 @@ export default function ChordDiagram({ root, chordType, labelMode, cagedForm }: 
             mode="chord"
             labelMode={labelMode}
           />
-          <div className="absolute inset-0 flex items-center justify-center bg-white/60 rounded-xl">
-            <div className="inline-flex items-center gap-2 bg-amber-50 text-amber-700 border border-amber-200 rounded-xl px-5 py-3 text-sm font-medium shadow">
+          <div className="absolute inset-0 flex items-center justify-center bg-white/60 dark:bg-slate-800/60 rounded-xl">
+            <div className="inline-flex items-center gap-2 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-700 rounded-xl px-5 py-3 text-sm font-medium shadow">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
               </svg>
@@ -89,7 +89,7 @@ export default function ChordDiagram({ root, chordType, labelMode, cagedForm }: 
   if (!voicing) {
     return (
       <div className="text-center py-12">
-        <div className="inline-flex items-center gap-2 bg-amber-50 text-amber-700 border border-amber-200 rounded-xl px-5 py-3 text-sm font-medium">
+        <div className="inline-flex items-center gap-2 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-700 rounded-xl px-5 py-3 text-sm font-medium">
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
           </svg>

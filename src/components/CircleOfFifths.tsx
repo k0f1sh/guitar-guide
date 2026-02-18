@@ -13,7 +13,6 @@ const RELATIVE_MINORS: Record<string, string> = {
   'F#': 'D♯m', 'C#': 'A♯m', 'G#': 'Fm', 'D#': 'Cm', 'A#': 'Gm', F: 'Dm',
 };
 
-// Root note to set when clicking a minor sector
 const RELATIVE_MINOR_ROOTS: Record<string, NoteName> = {
   C: 'A', G: 'E', D: 'B', A: 'F#', E: 'C#', B: 'G#',
   'F#': 'D#', 'C#': 'A#', 'G#': 'F', 'D#': 'C', 'A#': 'G', F: 'D',
@@ -51,11 +50,11 @@ export default function CircleOfFifths({ root, onRootChange }: CircleOfFifthsPro
 
   const cx = 100, cy = 100;
   const outerR = 92;
-  const midR = 52;       // major inner / minor outer boundary
-  const minorInnerR = 36; // minor inner edge (larger → bigger center)
+  const midR = 52;
+  const minorInnerR = 36;
   const noteR = 76;
   const sigR = 61;
-  const minorNoteR = 44;  // midpoint of minorInnerR(36) and midR(52)
+  const minorNoteR = 44;
 
   return (
     <svg viewBox="0 0 200 200" className="w-full max-w-[330px] mx-auto select-none">
@@ -71,13 +70,14 @@ export default function CircleOfFifths({ root, onRootChange }: CircleOfFifthsPro
         const isMajorHovered = interactive && note === hoveredMajor;
         const isMinorSelected = RELATIVE_MINOR_ROOTS[note] === root;
         const isMinorHovered = interactive && hoveredMinor === note;
-        let majorFill = '#F1F5F9';
-        if (isMajorSelected) majorFill = '#FDA4AF';
-        else if (isMajorHovered) majorFill = '#E2E8F0';
 
-        let minorFill = '#EEF2FF';
+        let majorFill = 'var(--cof-major-default)';
+        if (isMajorSelected) majorFill = '#FDA4AF';
+        else if (isMajorHovered) majorFill = 'var(--cof-major-hover)';
+
+        let minorFill = 'var(--cof-minor-default)';
         if (isMinorSelected) minorFill = '#C7D2FE';
-        else if (isMinorHovered) minorFill = '#E0E7FF';
+        else if (isMinorHovered) minorFill = 'var(--cof-minor-hover)';
 
         return (
           <g key={note}>
@@ -85,7 +85,7 @@ export default function CircleOfFifths({ root, onRootChange }: CircleOfFifthsPro
             <path
               d={sectorPath(cx, cy, outerR, midR, startDeg, endDeg)}
               fill={majorFill}
-              stroke="white"
+              stroke="var(--cof-stroke)"
               strokeWidth="2"
               style={{ cursor: interactive ? 'pointer' : 'default' }}
               onClick={interactive ? () => onRootChange!(note) : undefined}
@@ -96,7 +96,7 @@ export default function CircleOfFifths({ root, onRootChange }: CircleOfFifthsPro
             <path
               d={sectorPath(cx, cy, midR, minorInnerR, startDeg, endDeg)}
               fill={minorFill}
-              stroke="white"
+              stroke="var(--cof-stroke)"
               strokeWidth="2"
               style={{ cursor: interactive ? 'pointer' : 'default' }}
               onClick={interactive ? () => onRootChange!(RELATIVE_MINOR_ROOTS[note]) : undefined}
@@ -112,7 +112,7 @@ export default function CircleOfFifths({ root, onRootChange }: CircleOfFifthsPro
               dominantBaseline="central"
               fontSize="10"
               fontWeight="bold"
-              fill={isMajorSelected ? '#9f1239' : '#334155'}
+              fill={isMajorSelected ? 'var(--cof-text-major-sel)' : 'var(--cof-text-major)'}
               style={{ pointerEvents: 'none' }}
             >
               {note}
@@ -125,7 +125,7 @@ export default function CircleOfFifths({ root, onRootChange }: CircleOfFifthsPro
                 textAnchor="middle"
                 dominantBaseline="central"
                 fontSize="7"
-                fill={isMajorSelected ? '#be123c' : '#64748b'}
+                fill={isMajorSelected ? 'var(--cof-text-sig-sel)' : 'var(--cof-text-sig)'}
                 style={{ pointerEvents: 'none' }}
               >
                 {KEY_SIGNATURES[note]}
@@ -139,7 +139,7 @@ export default function CircleOfFifths({ root, onRootChange }: CircleOfFifthsPro
               dominantBaseline="central"
               fontSize="7"
               fontWeight={isMinorSelected ? 'bold' : 'normal'}
-              fill={isMinorSelected ? '#3730a3' : '#4338ca'}
+              fill={isMinorSelected ? 'var(--cof-text-minor-sel)' : 'var(--cof-text-minor)'}
               style={{ pointerEvents: 'none' }}
             >
               {RELATIVE_MINORS[note]}
@@ -149,7 +149,7 @@ export default function CircleOfFifths({ root, onRootChange }: CircleOfFifthsPro
       })}
 
       {/* Center circle */}
-      <circle cx={cx} cy={cy} r={minorInnerR - 3} fill="white" stroke="#E2E8F0" strokeWidth="1.5" />
+      <circle cx={cx} cy={cy} r={minorInnerR - 3} fill="var(--cof-center-bg)" stroke="var(--cof-center-stroke)" strokeWidth="1.5" />
       <text
         x={cx}
         y={cy - 6}
@@ -157,7 +157,7 @@ export default function CircleOfFifths({ root, onRootChange }: CircleOfFifthsPro
         dominantBaseline="central"
         fontSize="18"
         fontWeight="bold"
-        fill="#be123c"
+        fill="var(--cof-center-root)"
         style={{ pointerEvents: 'none' }}
       >
         {root}
@@ -168,7 +168,7 @@ export default function CircleOfFifths({ root, onRootChange }: CircleOfFifthsPro
         textAnchor="middle"
         dominantBaseline="central"
         fontSize="9"
-        fill="#64748b"
+        fill="var(--cof-center-sig)"
         style={{ pointerEvents: 'none' }}
       >
         {KEY_SIGNATURES[root] || '♮'}

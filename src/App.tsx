@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { NoteName } from './data/notes';
 import type { CagedForm } from './data/chords';
 import { CHORD_VOICINGS } from './data/chords';
@@ -23,6 +23,11 @@ export default function App() {
   const [cagedForm, setCagedForm] = useState<CagedForm | null>(null);
   const [labelMode, setLabelMode] = useState<NoteLabel>('note');
   const [volume, setVolume] = useState(0.5);
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', darkMode);
+  }, [darkMode]);
 
   const handleSelectDiatonicChord = (chordRoot: NoteName, suffix: string) => {
     setRoot(chordRoot);
@@ -49,13 +54,13 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
+      <Header darkMode={darkMode} onToggleDarkMode={() => setDarkMode(d => !d)} />
 
       {/* Fretboard - 上側・横幅いっぱい */}
       <section className="w-full px-4 pt-5 pb-2">
-        <div className="bg-white rounded-2xl shadow-lg shadow-slate-200/50 border border-slate-100 p-5">
-          <h2 className="text-4xl font-extrabold text-slate-700 mb-4 flex items-center gap-3">
-            <span className="text-4xl font-extrabold text-slate-700">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-slate-900/50 border border-slate-100 dark:border-slate-700 p-5">
+          <h2 className="text-4xl font-extrabold text-slate-700 dark:text-slate-200 mb-4 flex items-center gap-3">
+            <span className="text-4xl font-extrabold text-slate-700 dark:text-slate-200">
               {root}
             </span>
             {title}
@@ -95,7 +100,7 @@ export default function App() {
       {/* Control panel + 五度圏 */}
       <section className="w-full px-4 py-4">
         <div className="flex flex-col md:flex-row gap-4 items-start">
-          <div className="w-full md:w-auto md:flex-shrink-0 flex items-center justify-center bg-white rounded-2xl shadow-lg shadow-slate-200/50 border border-slate-100 p-5">
+          <div className="w-full md:w-auto md:flex-shrink-0 flex items-center justify-center bg-white dark:bg-slate-800 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-slate-900/50 border border-slate-100 dark:border-slate-700 p-5">
             <CircleOfFifths root={root} onRootChange={setRoot} />
           </div>
           <div className="flex-1 min-w-0">

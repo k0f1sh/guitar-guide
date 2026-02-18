@@ -62,24 +62,24 @@ export default function Fretboard({
     >
       <defs>
         <linearGradient id="grad-root" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#FCA5A5" />
-          <stop offset="100%" stopColor="#FDA4AF" />
+          <stop offset="0%" style={{ stopColor: 'var(--fb-grad-root-1)' }} />
+          <stop offset="100%" style={{ stopColor: 'var(--fb-grad-root-2)' }} />
         </linearGradient>
         <linearGradient id="grad-scale" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#A5B4FC" />
-          <stop offset="100%" stopColor="#C4B5FD" />
+          <stop offset="0%" style={{ stopColor: 'var(--fb-grad-scale-1)' }} />
+          <stop offset="100%" style={{ stopColor: 'var(--fb-grad-scale-2)' }} />
         </linearGradient>
         <linearGradient id="grad-chord" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#A7F3D0" />
-          <stop offset="100%" stopColor="#6EE7B7" />
+          <stop offset="0%" style={{ stopColor: 'var(--fb-grad-chord-1)' }} />
+          <stop offset="100%" style={{ stopColor: 'var(--fb-grad-chord-2)' }} />
         </linearGradient>
         <linearGradient id="wood" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#A0714F" />
-          <stop offset="50%" stopColor="#8B6240" />
-          <stop offset="100%" stopColor="#7A5635" />
+          <stop offset="0%" style={{ stopColor: 'var(--fb-wood-1)' }} />
+          <stop offset="50%" style={{ stopColor: 'var(--fb-wood-2)' }} />
+          <stop offset="100%" style={{ stopColor: 'var(--fb-wood-3)' }} />
         </linearGradient>
         <filter id="board-shadow" x="-1%" y="-5%" width="102%" height="115%">
-          <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#1e293b" floodOpacity="0.15" />
+          <feDropShadow dx="0" dy="4" stdDeviation="6" style={{ floodColor: 'var(--fb-shadow-color)' }} floodOpacity="0.15" />
         </filter>
       </defs>
 
@@ -100,9 +100,9 @@ export default function Fretboard({
         y={PADDING_TOP - 12}
         width={7}
         height={STRING_SPACING * (NUM_STRINGS - 1) + 24}
-        fill="#F5F0E8"
+        fill="var(--fb-nut)"
         rx={2}
-        stroke="#D4C9B8"
+        stroke="var(--fb-nut-stroke)"
         strokeWidth={0.5}
       />
 
@@ -114,7 +114,7 @@ export default function Fretboard({
           y1={PADDING_TOP - 12}
           x2={fretX(i + 1)}
           y2={PADDING_TOP + STRING_SPACING * (NUM_STRINGS - 1) + 12}
-          stroke="#B0B0B0"
+          stroke="var(--fb-fret-wire)"
           strokeWidth={2.5}
           opacity={0.7}
         />
@@ -126,8 +126,8 @@ export default function Fretboard({
         if (DOUBLE_MARKERS.includes(fret)) {
           return (
             <g key={`marker-${fret}`}>
-              <circle cx={cx} cy={stringY(1)} r={7} fill="#E8DDD0" opacity={0.6} />
-              <circle cx={cx} cy={stringY(4)} r={7} fill="#E8DDD0" opacity={0.6} />
+              <circle cx={cx} cy={stringY(1)} r={7} fill="var(--fb-inlay)" opacity={0.6} />
+              <circle cx={cx} cy={stringY(4)} r={7} fill="var(--fb-inlay)" opacity={0.6} />
             </g>
           );
         }
@@ -137,7 +137,7 @@ export default function Fretboard({
             cx={cx}
             cy={PADDING_TOP + (STRING_SPACING * (NUM_STRINGS - 1)) / 2}
             r={7}
-            fill="#E8DDD0"
+            fill="var(--fb-inlay)"
             opacity={0.6}
           />
         );
@@ -159,7 +159,7 @@ export default function Fretboard({
             y1={stringY(i)}
             x2={PADDING_LEFT + BOARD_WIDTH}
             y2={stringY(i)}
-            stroke={i < 3 ? '#E8D8C4' : '#C0A882'}
+            stroke={i < 3 ? 'var(--fb-string-hi)' : 'var(--fb-string-lo)'}
             strokeWidth={1 + i * 0.5}
           />
         </g>
@@ -172,7 +172,7 @@ export default function Fretboard({
           x={noteCenterX(i + 1)}
           y={TOTAL_HEIGHT - 6}
           textAnchor="middle"
-          fill="#334155"
+          fill="var(--fb-fret-num)"
           fontSize={16}
           fontWeight="800"
           fontFamily="Inter, system-ui, sans-serif"
@@ -212,7 +212,7 @@ export default function Fretboard({
                   cy={y}
                   r={9}
                   fill="none"
-                  stroke="#64748B"
+                  stroke="var(--fb-open-stroke)"
                   strokeWidth={2.5}
                 />
               );

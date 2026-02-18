@@ -32,7 +32,7 @@ export default function PlaybackControls({ frets, volume, onVolumeChange }: Play
         </svg>
         ストローク
       </button>
-      <label className="flex items-center gap-2 ml-2 text-sm text-slate-500">
+      <label className="flex items-center gap-2 ml-2 text-sm text-slate-500 dark:text-slate-400">
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M15.536 8.464a5 5 0 010 7.072M17.95 6.05a8 8 0 010 11.9M6.5 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h2.5l4.2-3.78A.5.5 0 0111.5 5.7v12.6a.5.5 0 01-.8.4L6.5 15z" />
         </svg>

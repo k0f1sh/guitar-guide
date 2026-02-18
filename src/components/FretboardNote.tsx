@@ -53,7 +53,7 @@ export default function FretboardNote({
         y={y}
         textAnchor="middle"
         dominantBaseline="central"
-        fill="#1e293b"
+        fill="var(--fb-note-text)"
         fontSize={label.length > 2 ? 16 : 21}
         fontWeight="800"
         fontFamily="Inter, system-ui, sans-serif"
