@@ -4,7 +4,7 @@ export const NOTE_NAMES = [
 
 export type NoteName = (typeof NOTE_NAMES)[number];
 
-// Standard tuning: string 6 (low E) to string 1 (high E)
+// Standard tuning for display order: string 1 (high E) to string 6 (low E)
 export const STANDARD_TUNING: NoteName[] = ['E', 'B', 'G', 'D', 'A', 'E'];
 
 export const FRET_COUNT = 24;
