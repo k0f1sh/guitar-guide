@@ -119,6 +119,10 @@ export default function App() {
           onLabelModeChange={setLabelMode}
         />
       </section>
+
+      <footer className="px-4 pb-5 text-center text-xs text-slate-500 dark:text-slate-400">
+        AI生成のため、コードや指番号は正確でない場合があります。
+      </footer>
     </div>
   );
 }
