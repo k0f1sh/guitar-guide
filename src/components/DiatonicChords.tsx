@@ -4,11 +4,12 @@ import { getDiatonicChords } from '../utils/music';
 interface Props {
   root: NoteName;
   intervals: number[];
+  degrees: string[];
   onSelectChord: (root: NoteName, suffix: string) => void;
 }
 
-export default function DiatonicChords({ root, intervals, onSelectChord }: Props) {
-  const chords = getDiatonicChords(root, intervals);
+export default function DiatonicChords({ root, intervals, degrees, onSelectChord }: Props) {
+  const chords = getDiatonicChords(root, intervals, degrees);
 
   // ディグリー表記をコード品質に合わせて生成
   const degreeLabels = chords.map((chord) => {

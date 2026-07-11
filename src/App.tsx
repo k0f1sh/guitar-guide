@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import type { NoteName } from './data/notes';
 import type { CagedForm } from './data/chords';
-import { CHORD_VOICINGS } from './data/chords';
+import { CHORD_TYPES, CHORD_VOICINGS } from './data/chords';
 import { SCALES } from './data/scales';
-import { getScaleNotes, transposeCagedForm } from './utils/music';
+import { getContextDegreeName, getScaleNotes, getSpellingMap, transposeCagedForm } from './utils/music';
 import type { NoteLabel } from './utils/music';
 import Header from './components/Header';
 import ControlPanel from './components/ControlPanel';
@@ -37,6 +37,16 @@ export default function App() {
 
   const scale = SCALES[scaleIndex];
   const highlightedNotes = getScaleNotes(root, scale.intervals);
+  const scaleDisplayNotes = getSpellingMap(root, scale.intervals, scale.degrees);
+  const scaleDisplayDegrees = new Map(
+    highlightedNotes.map((note) => [note, getContextDegreeName(root, note, scale.intervals, scale.degrees)]),
+  );
+  const chordDefinition = CHORD_TYPES.find((type) => type.suffix === chordType);
+  const titleRoot = mode === 'scale'
+    ? scaleDisplayNotes.get(root) ?? root
+    : chordDefinition
+      ? getSpellingMap(root, chordDefinition.intervals, chordDefinition.degrees).get(root) ?? root
+      : root;
 
   // コード音再生用の frets 配列を取得
   const chordFrets = mode === 'chord'
@@ -60,7 +70,7 @@ export default function App() {
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-slate-900/50 border border-slate-100 dark:border-slate-700 p-5">
           <h2 className="text-4xl font-extrabold text-slate-700 dark:text-slate-200 mb-4 flex items-center gap-3">
             <span className="text-4xl font-extrabold text-slate-700 dark:text-slate-200">
-              {root}
+              {titleRoot}
             </span>
             {title}
           </h2>
@@ -70,6 +80,8 @@ export default function App() {
               highlightedNotes={highlightedNotes}
               mode="scale"
               labelMode={labelMode}
+              displayNotes={scaleDisplayNotes}
+              displayDegrees={scaleDisplayDegrees}
             />
           ) : (
             <ChordDiagram
@@ -86,11 +98,12 @@ export default function App() {
               <DiatonicChords
                 root={root}
                 intervals={scale.intervals}
+                degrees={scale.degrees}
                 onSelectChord={handleSelectDiatonicChord}
               />
             ) : (
               <>
-                {chordFrets ? <ChordNotes frets={chordFrets} root={root} /> : <div />}
+                {chordFrets ? <ChordNotes frets={chordFrets} root={root} chordType={chordType} /> : <div />}
                 <PlaybackControls
                   frets={chordFrets}
                   volume={volume}
@@ -121,7 +134,7 @@ export default function App() {
       </section>
 
       <footer className="px-4 pb-5 text-center text-xs text-slate-500 dark:text-slate-400">
-        AI生成のため、コードや指番号は正確でない場合があります。
+        標準チューニング（E–A–D–G–B–E）／24フレット対応
       </footer>
     </div>
   );

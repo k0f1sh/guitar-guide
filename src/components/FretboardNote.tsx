@@ -12,6 +12,8 @@ interface FretboardNoteProps {
   isChordNote?: boolean;
   finger?: number;
   labelMode: NoteLabel;
+  displayNote?: string;
+  displayDegree?: string;
 }
 
 export default function FretboardNote({
@@ -24,6 +26,8 @@ export default function FretboardNote({
   isChordNote,
   finger,
   labelMode,
+  displayNote,
+  displayDegree,
 }: FretboardNoteProps) {
   if (!isHighlighted && !isChordNote) return null;
 
@@ -34,12 +38,12 @@ export default function FretboardNote({
       : 'grad-scale';
 
   let label: string;
-  if (labelMode === 'finger' && finger != null && finger > 0) {
+  if (labelMode === 'finger' && finger != null) {
     label = String(finger);
   } else if (labelMode === 'degree') {
-    label = getDegreeName(root, note);
+    label = displayDegree ?? getDegreeName(root, note);
   } else {
-    label = note;
+    label = displayNote ?? note;
   }
 
   return (

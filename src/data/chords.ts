@@ -8,23 +8,26 @@ export interface ChordVoicing {
 export interface ChordType {
   suffix: string;
   label: string;
+  intervals: number[];
+  degrees: string[];
+  optionalIntervals?: number[];
 }
 
 export const CHORD_TYPES: ChordType[] = [
-  { suffix: 'major', label: 'major' },
-  { suffix: 'minor', label: 'minor' },
-  { suffix: '7', label: '7' },
-  { suffix: 'm7', label: 'm7' },
-  { suffix: 'maj7', label: 'maj7' },
-  { suffix: 'dim', label: 'dim' },
-  { suffix: 'aug', label: 'aug' },
-  { suffix: 'sus4', label: 'sus4' },
-  { suffix: 'sus2', label: 'sus2' },
-  { suffix: '7sus4', label: '7sus4' },
-  { suffix: 'dim7', label: 'dim7' },
-  { suffix: 'm7b5', label: 'm7b5' },
-  { suffix: 'add9', label: 'add9' },
-  { suffix: '9', label: '9' },
+  { suffix: 'major', label: 'major', intervals: [0, 4, 7], degrees: ['R', '3', '5'] },
+  { suffix: 'minor', label: 'minor', intervals: [0, 3, 7], degrees: ['R', 'b3', '5'] },
+  { suffix: '7', label: '7', intervals: [0, 4, 7, 10], degrees: ['R', '3', '5', 'b7'], optionalIntervals: [7] },
+  { suffix: 'm7', label: 'm7', intervals: [0, 3, 7, 10], degrees: ['R', 'b3', '5', 'b7'], optionalIntervals: [7] },
+  { suffix: 'maj7', label: 'maj7', intervals: [0, 4, 7, 11], degrees: ['R', '3', '5', '7'], optionalIntervals: [7] },
+  { suffix: 'dim', label: 'dim', intervals: [0, 3, 6], degrees: ['R', 'b3', 'b5'] },
+  { suffix: 'aug', label: 'aug', intervals: [0, 4, 8], degrees: ['R', '3', '#5'] },
+  { suffix: 'sus4', label: 'sus4', intervals: [0, 5, 7], degrees: ['R', '4', '5'] },
+  { suffix: 'sus2', label: 'sus2', intervals: [0, 2, 7], degrees: ['R', '2', '5'] },
+  { suffix: '7sus4', label: '7sus4', intervals: [0, 5, 7, 10], degrees: ['R', '4', '5', 'b7'], optionalIntervals: [7] },
+  { suffix: 'dim7', label: 'dim7', intervals: [0, 3, 6, 9], degrees: ['R', 'b3', 'b5', 'bb7'] },
+  { suffix: 'm7b5', label: 'm7b5', intervals: [0, 3, 6, 10], degrees: ['R', 'b3', 'b5', 'b7'] },
+  { suffix: 'add9', label: 'add9', intervals: [0, 4, 7, 2], degrees: ['R', '3', '5', '9'] },
+  { suffix: '9', label: '9', intervals: [0, 4, 7, 10, 2], degrees: ['R', '3', '5', 'b7', '9'], optionalIntervals: [7] },
 ];
 
 // ── CAGED system ──
@@ -35,6 +38,8 @@ export const CAGED_FORMS: CagedForm[] = ['C', 'A', 'G', 'E', 'D'];
 export interface CagedShape {
   frets: number[];
   fingers: number[];
+  movableFrets?: number[];
+  movableFingers: number[];
   baseRoot: string;
 }
 
@@ -42,39 +47,39 @@ export interface CagedShape {
 // キー: "フォーム-コードタイプ"
 export const CAGED_SHAPES: Record<string, CagedShape> = {
   // ── C フォーム ──
-  'C-major':  { frets: [-1, 3, 2, 0, 1, 0], fingers: [0, 3, 2, 0, 1, 0], baseRoot: 'C' },
-  'C-minor':  { frets: [-1, 3, 1, 0, 1, 3], fingers: [0, 3, 1, 0, 2, 4], baseRoot: 'C' },
-  'C-7':      { frets: [-1, 3, 2, 3, 1, 0], fingers: [0, 3, 2, 4, 1, 0], baseRoot: 'C' },
-  'C-m7':     { frets: [-1, 3, 1, 3, 1, 3], fingers: [0, 2, 1, 3, 1, 4], baseRoot: 'C' },
-  'C-maj7':   { frets: [-1, 3, 2, 0, 0, 0], fingers: [0, 3, 2, 0, 0, 0], baseRoot: 'C' },
+  'C-major':  { frets: [-1, 3, 2, 0, 1, 0], fingers: [0, 3, 2, 0, 1, 0], movableFingers: [0, 4, 3, 1, 2, 1], baseRoot: 'C' },
+  'C-minor':  { frets: [-1, 3, 1, 0, 1, 3], fingers: [0, 3, 1, 0, 2, 4], movableFrets: [-1, 3, 1, 0, 1, -1], movableFingers: [0, 4, 2, 1, 3, 0], baseRoot: 'C' },
+  'C-7':      { frets: [-1, 3, 2, 3, 1, 0], fingers: [0, 3, 2, 4, 1, 0], movableFrets: [-1, 3, 2, 3, 1, -1], movableFingers: [0, 3, 2, 4, 1, 0], baseRoot: 'C' },
+  'C-m7':     { frets: [-1, 3, 1, 3, 1, 3], fingers: [0, 2, 1, 3, 1, 4], movableFingers: [0, 2, 1, 3, 1, 4], baseRoot: 'C' },
+  'C-maj7':   { frets: [-1, 3, 2, 0, 0, 0], fingers: [0, 3, 2, 0, 0, 0], movableFingers: [0, 4, 3, 1, 1, 1], baseRoot: 'C' },
 
   // ── A フォーム ──
-  'A-major':  { frets: [-1, 0, 2, 2, 2, 0], fingers: [0, 0, 1, 2, 3, 0], baseRoot: 'A' },
-  'A-minor':  { frets: [-1, 0, 2, 2, 1, 0], fingers: [0, 0, 2, 3, 1, 0], baseRoot: 'A' },
-  'A-7':      { frets: [-1, 0, 2, 0, 2, 0], fingers: [0, 0, 2, 0, 3, 0], baseRoot: 'A' },
-  'A-m7':     { frets: [-1, 0, 2, 0, 1, 0], fingers: [0, 0, 2, 0, 1, 0], baseRoot: 'A' },
-  'A-maj7':   { frets: [-1, 0, 2, 1, 2, 0], fingers: [0, 0, 2, 1, 3, 0], baseRoot: 'A' },
+  'A-major':  { frets: [-1, 0, 2, 2, 2, 0], fingers: [0, 0, 1, 2, 3, 0], movableFingers: [0, 1, 3, 3, 3, 1], baseRoot: 'A' },
+  'A-minor':  { frets: [-1, 0, 2, 2, 1, 0], fingers: [0, 0, 2, 3, 1, 0], movableFingers: [0, 1, 3, 4, 2, 1], baseRoot: 'A' },
+  'A-7':      { frets: [-1, 0, 2, 0, 2, 0], fingers: [0, 0, 2, 0, 3, 0], movableFingers: [0, 1, 3, 1, 4, 1], baseRoot: 'A' },
+  'A-m7':     { frets: [-1, 0, 2, 0, 1, 0], fingers: [0, 0, 2, 0, 1, 0], movableFingers: [0, 1, 3, 1, 2, 1], baseRoot: 'A' },
+  'A-maj7':   { frets: [-1, 0, 2, 1, 2, 0], fingers: [0, 0, 2, 1, 3, 0], movableFingers: [0, 1, 4, 2, 3, 1], baseRoot: 'A' },
 
   // ── G フォーム ──
-  'G-major':  { frets: [3, 2, 0, 0, 0, 3], fingers: [2, 1, 0, 0, 0, 3], baseRoot: 'G' },
-  'G-minor':  { frets: [3, 5, 5, 3, 3, 3], fingers: [1, 3, 4, 1, 1, 1], baseRoot: 'G' },
-  'G-7':      { frets: [3, 2, 0, 0, 0, 1], fingers: [3, 2, 0, 0, 0, 1], baseRoot: 'G' },
-  'G-m7':     { frets: [3, 5, 3, 3, 3, 3], fingers: [1, 3, 1, 1, 1, 1], baseRoot: 'G' },
-  'G-maj7':   { frets: [3, 2, 0, 0, 0, 2], fingers: [3, 1, 0, 0, 0, 2], baseRoot: 'G' },
+  'G-major':  { frets: [3, 2, 0, 0, 0, 3], fingers: [2, 1, 0, 0, 0, 3], movableFingers: [3, 2, 1, 1, 1, 4], baseRoot: 'G' },
+  'G-minor':  { frets: [3, 5, 5, 3, 3, 3], fingers: [1, 3, 4, 1, 1, 1], movableFingers: [1, 3, 4, 1, 1, 1], baseRoot: 'G' },
+  'G-7':      { frets: [3, 2, 0, 0, 0, 1], fingers: [3, 2, 0, 0, 0, 1], movableFingers: [4, 3, 1, 1, 1, 2], baseRoot: 'G' },
+  'G-m7':     { frets: [3, 5, 3, 3, 3, 3], fingers: [1, 3, 1, 1, 1, 1], movableFingers: [1, 3, 1, 1, 1, 1], baseRoot: 'G' },
+  'G-maj7':   { frets: [3, 2, 0, 0, 0, 2], fingers: [3, 1, 0, 0, 0, 2], movableFingers: [4, 2, 1, 1, 1, 3], baseRoot: 'G' },
 
   // ── E フォーム ──
-  'E-major':  { frets: [0, 2, 2, 1, 0, 0], fingers: [0, 2, 3, 1, 0, 0], baseRoot: 'E' },
-  'E-minor':  { frets: [0, 2, 2, 0, 0, 0], fingers: [0, 2, 3, 0, 0, 0], baseRoot: 'E' },
-  'E-7':      { frets: [0, 2, 0, 1, 0, 0], fingers: [0, 2, 0, 1, 0, 0], baseRoot: 'E' },
-  'E-m7':     { frets: [0, 2, 0, 0, 0, 0], fingers: [0, 2, 0, 0, 0, 0], baseRoot: 'E' },
-  'E-maj7':   { frets: [0, 2, 1, 1, 0, 0], fingers: [0, 3, 1, 2, 0, 0], baseRoot: 'E' },
+  'E-major':  { frets: [0, 2, 2, 1, 0, 0], fingers: [0, 2, 3, 1, 0, 0], movableFingers: [1, 3, 4, 2, 1, 1], baseRoot: 'E' },
+  'E-minor':  { frets: [0, 2, 2, 0, 0, 0], fingers: [0, 2, 3, 0, 0, 0], movableFingers: [1, 3, 4, 1, 1, 1], baseRoot: 'E' },
+  'E-7':      { frets: [0, 2, 0, 1, 0, 0], fingers: [0, 2, 0, 1, 0, 0], movableFingers: [1, 3, 1, 2, 1, 1], baseRoot: 'E' },
+  'E-m7':     { frets: [0, 2, 0, 0, 0, 0], fingers: [0, 2, 0, 0, 0, 0], movableFingers: [1, 3, 1, 1, 1, 1], baseRoot: 'E' },
+  'E-maj7':   { frets: [0, 2, 1, 1, 0, 0], fingers: [0, 3, 1, 2, 0, 0], movableFingers: [1, 4, 2, 3, 1, 1], baseRoot: 'E' },
 
   // ── D フォーム ──
-  'D-major':  { frets: [-1, -1, 0, 2, 3, 2], fingers: [0, 0, 0, 1, 3, 2], baseRoot: 'D' },
-  'D-minor':  { frets: [-1, -1, 0, 2, 3, 1], fingers: [0, 0, 0, 2, 3, 1], baseRoot: 'D' },
-  'D-7':      { frets: [-1, -1, 0, 2, 1, 2], fingers: [0, 0, 0, 2, 1, 3], baseRoot: 'D' },
-  'D-m7':     { frets: [-1, -1, 0, 2, 1, 1], fingers: [0, 0, 0, 2, 1, 1], baseRoot: 'D' },
-  'D-maj7':   { frets: [-1, -1, 0, 2, 2, 2], fingers: [0, 0, 0, 1, 2, 3], baseRoot: 'D' },
+  'D-major':  { frets: [-1, -1, 0, 2, 3, 2], fingers: [0, 0, 0, 1, 3, 2], movableFingers: [0, 0, 1, 2, 4, 3], baseRoot: 'D' },
+  'D-minor':  { frets: [-1, -1, 0, 2, 3, 1], fingers: [0, 0, 0, 2, 3, 1], movableFingers: [0, 0, 1, 3, 4, 2], baseRoot: 'D' },
+  'D-7':      { frets: [-1, -1, 0, 2, 1, 2], fingers: [0, 0, 0, 2, 1, 3], movableFingers: [0, 0, 1, 3, 2, 4], baseRoot: 'D' },
+  'D-m7':     { frets: [-1, -1, 0, 2, 1, 1], fingers: [0, 0, 0, 2, 1, 1], movableFingers: [0, 0, 1, 3, 2, 2], baseRoot: 'D' },
+  'D-maj7':   { frets: [-1, -1, 0, 2, 2, 2], fingers: [0, 0, 0, 1, 2, 3], movableFingers: [0, 0, 1, 3, 3, 3], baseRoot: 'D' },
 };
 
 // Key: "root-suffix", e.g. "C-major", "A-minor"
@@ -91,7 +96,7 @@ export const CHORD_VOICINGS: Record<string, ChordVoicing> = {
   'C-sus2':   { frets: [-1, 3, 0, 0, 1, 3], fingers: [0, 2, 0, 0, 1, 3] },
   'C-7sus4':  { frets: [-1, 3, 3, 3, 1, 1], fingers: [0, 2, 3, 4, 1, 1] },
   'C-dim7':   { frets: [-1, 3, 4, 5, 4, 5], fingers: [0, 1, 2, 3, 2, 3] },
-  'C-m7b5':   { frets: [-1, 3, 4, 3, 4, 3], fingers: [0, 1, 2, 1, 2, 1] },
+  'C-m7b5':   { frets: [-1, 3, 4, 3, 4, -1], fingers: [0, 1, 2, 1, 3, 0] },
   'C-add9':   { frets: [-1, 3, 2, 0, 3, 0], fingers: [0, 2, 1, 0, 3, 0] },
   'C-9':      { frets: [-1, 3, 2, 3, 3, 3], fingers: [0, 2, 1, 3, 3, 3] },
 
@@ -107,8 +112,8 @@ export const CHORD_VOICINGS: Record<string, ChordVoicing> = {
   'D-sus2':   { frets: [-1, -1, 0, 2, 3, 0], fingers: [0, 0, 0, 1, 2, 0] },
   'D-7sus4':  { frets: [-1, -1, 0, 2, 1, 3], fingers: [0, 0, 0, 2, 1, 3] },
   'D-dim7':   { frets: [-1, 5, 6, 7, 6, 7], fingers: [0, 1, 2, 3, 2, 3] },
-  'D-m7b5':   { frets: [-1, 5, 6, 5, 6, 5], fingers: [0, 1, 2, 1, 2, 1] },
-  'D-add9':   { frets: [-1, -1, 0, 2, 3, 0], fingers: [0, 0, 0, 1, 2, 0] },
+  'D-m7b5':   { frets: [-1, 5, 6, 5, 6, -1], fingers: [0, 1, 2, 1, 3, 0] },
+  'D-add9':   { frets: [-1, 5, 4, 2, 3, 0], fingers: [0, 4, 3, 1, 2, 0] },
   'D-9':      { frets: [-1, 5, 7, 9, 7, 8], fingers: [0, 1, 2, 4, 2, 3] },
 
   // ── E ──
@@ -123,7 +128,7 @@ export const CHORD_VOICINGS: Record<string, ChordVoicing> = {
   'E-sus2':   { frets: [0, 2, 4, 4, 0, 0], fingers: [0, 1, 3, 4, 0, 0] },
   'E-7sus4':  { frets: [0, 2, 0, 2, 0, 0], fingers: [0, 1, 0, 2, 0, 0] },
   'E-dim7':   { frets: [0, 1, 2, 0, 2, 0], fingers: [0, 1, 2, 0, 3, 0] },
-  'E-m7b5':   { frets: [0, 1, 0, 0, 0, 0], fingers: [0, 1, 0, 0, 0, 0] },
+  'E-m7b5':   { frets: [0, 1, 0, 0, -1, -1], fingers: [0, 1, 0, 0, 0, 0] },
   'E-add9':   { frets: [0, 2, 4, 1, 0, 0], fingers: [0, 1, 3, 2, 0, 0] },
   'E-9':      { frets: [0, 2, 0, 1, 0, 2], fingers: [0, 2, 0, 1, 0, 3] },
 
@@ -136,10 +141,10 @@ export const CHORD_VOICINGS: Record<string, ChordVoicing> = {
   'F-dim':    { frets: [1, 2, 3, 1, -1, -1], fingers: [1, 2, 3, 1, 0, 0] },
   'F-aug':    { frets: [1, 4, 3, 2, 2, 1], fingers: [1, 4, 3, 2, 2, 1] },
   'F-sus4':   { frets: [1, 3, 3, 3, 1, 1], fingers: [1, 2, 2, 2, 1, 1] },
-  'F-sus2':   { frets: [1, 3, 5, 2, 1, 1], fingers: [1, 3, 4, 2, 1, 1] },
+  'F-sus2':   { frets: [1, 3, 5, 5, 1, 1], fingers: [1, 3, 4, 4, 1, 1] },
   'F-7sus4':  { frets: [1, 3, 1, 3, 1, 1], fingers: [1, 2, 1, 2, 1, 1] },
   'F-dim7':   { frets: [1, 2, 3, 1, 3, 1], fingers: [1, 2, 3, 1, 3, 1] },
-  'F-m7b5':   { frets: [1, 2, 1, 1, 1, 1], fingers: [1, 2, 1, 1, 1, 1] },
+  'F-m7b5':   { frets: [1, 2, 1, 1, -1, -1], fingers: [1, 2, 1, 1, 0, 0] },
   'F-add9':   { frets: [1, 3, 3, 2, 1, 3], fingers: [1, 3, 3, 2, 1, 3] },
   'F-9':      { frets: [1, 3, 1, 2, 1, 3], fingers: [1, 3, 1, 2, 1, 3] },
 
@@ -155,7 +160,7 @@ export const CHORD_VOICINGS: Record<string, ChordVoicing> = {
   'G-sus2':   { frets: [3, 0, 0, 2, 3, 3], fingers: [2, 0, 0, 1, 3, 4] },
   'G-7sus4':  { frets: [3, 3, 0, 0, 1, 1], fingers: [3, 4, 0, 0, 1, 1] },
   'G-dim7':   { frets: [3, 4, 5, 3, 5, 3], fingers: [1, 2, 3, 1, 3, 1] },
-  'G-m7b5':   { frets: [3, 4, 3, 3, 3, 3], fingers: [1, 2, 1, 1, 1, 1] },
+  'G-m7b5':   { frets: [3, 4, 3, 3, -1, -1], fingers: [1, 2, 1, 1, 0, 0] },
   'G-add9':   { frets: [3, 2, 0, 2, 0, 3], fingers: [3, 2, 0, 1, 0, 4] },
   'G-9':      { frets: [3, 5, 3, 4, 3, 5], fingers: [1, 3, 1, 2, 1, 3] },
 
@@ -171,7 +176,7 @@ export const CHORD_VOICINGS: Record<string, ChordVoicing> = {
   'A-sus2':   { frets: [-1, 0, 2, 2, 0, 0], fingers: [0, 0, 1, 2, 0, 0] },
   'A-7sus4':  { frets: [-1, 0, 2, 0, 3, 0], fingers: [0, 0, 1, 0, 3, 0] },
   'A-dim7':   { frets: [-1, 0, 1, 2, 1, 2], fingers: [0, 0, 1, 3, 2, 4] },
-  'A-m7b5':   { frets: [-1, 0, 1, 0, 1, 0], fingers: [0, 0, 1, 0, 2, 0] },
+  'A-m7b5':   { frets: [-1, 0, 1, 0, 1, -1], fingers: [0, 0, 1, 0, 2, 0] },
   'A-add9':   { frets: [-1, 0, 2, 4, 2, 0], fingers: [0, 0, 1, 4, 2, 0] },
   'A-9':      { frets: [-1, 0, 2, 4, 2, 3], fingers: [0, 0, 1, 3, 1, 2] },
 
@@ -187,7 +192,7 @@ export const CHORD_VOICINGS: Record<string, ChordVoicing> = {
   'B-sus2':   { frets: [-1, 2, 4, 4, 2, 2], fingers: [0, 1, 2, 2, 1, 1] },
   'B-7sus4':  { frets: [-1, 2, 4, 2, 5, 2], fingers: [0, 1, 3, 1, 4, 2] },
   'B-dim7':   { frets: [-1, 2, 3, 4, 3, 4], fingers: [0, 1, 2, 3, 2, 3] },
-  'B-m7b5':   { frets: [-1, 2, 3, 2, 3, 2], fingers: [0, 1, 2, 1, 2, 1] },
+  'B-m7b5':   { frets: [-1, 2, 3, 2, 3, -1], fingers: [0, 1, 2, 1, 3, 0] },
   'B-add9':   { frets: [-1, 2, 1, 4, 2, 2], fingers: [0, 2, 1, 4, 3, 3] },
   'B-9':      { frets: [-1, 2, 1, 2, 2, 2], fingers: [0, 2, 1, 3, 3, 3] },
 
@@ -202,7 +207,10 @@ export const CHORD_VOICINGS: Record<string, ChordVoicing> = {
   'C#-sus4':  { frets: [-1, 4, 6, 6, 7, 4], fingers: [0, 1, 2, 2, 3, 1] },
   'C#-sus2':  { frets: [-1, 4, 6, 6, 4, 4], fingers: [0, 1, 2, 2, 1, 1] },
   'C#-dim7':  { frets: [-1, 4, 5, 6, 5, 6], fingers: [0, 1, 2, 3, 2, 3] },
-  'C#-m7b5':  { frets: [-1, 4, 5, 4, 5, 4], fingers: [0, 1, 2, 1, 2, 1] },
+  'C#-m7b5':  { frets: [-1, 4, 5, 4, 5, -1], fingers: [0, 1, 2, 1, 3, 0] },
+  'C#-7sus4': { frets: [-1, 4, 6, 4, 7, 4], fingers: [0, 1, 3, 1, 4, 1] },
+  'C#-add9':  { frets: [-1, 4, 6, 8, 6, 4], fingers: [0, 1, 3, 4, 3, 1] },
+  'C#-9':     { frets: [-1, 4, 3, 4, 4, 4], fingers: [0, 2, 1, 3, 3, 3] },
 
   // ── D# ──
   'D#-major': { frets: [-1, 6, 8, 8, 8, 6], fingers: [0, 1, 2, 2, 2, 1] },
@@ -215,7 +223,10 @@ export const CHORD_VOICINGS: Record<string, ChordVoicing> = {
   'D#-sus4':  { frets: [-1, 6, 8, 8, 9, 6], fingers: [0, 1, 2, 2, 3, 1] },
   'D#-sus2':  { frets: [-1, 6, 8, 8, 6, 6], fingers: [0, 1, 2, 2, 1, 1] },
   'D#-dim7':  { frets: [-1, 6, 7, 8, 7, 8], fingers: [0, 1, 2, 3, 2, 3] },
-  'D#-m7b5':  { frets: [-1, 6, 7, 6, 7, 6], fingers: [0, 1, 2, 1, 2, 1] },
+  'D#-m7b5':  { frets: [-1, 6, 7, 6, 7, -1], fingers: [0, 1, 2, 1, 3, 0] },
+  'D#-7sus4': { frets: [-1, 6, 8, 6, 9, 6], fingers: [0, 1, 3, 1, 4, 1] },
+  'D#-add9':  { frets: [-1, 6, 8, 10, 8, 6], fingers: [0, 1, 3, 4, 3, 1] },
+  'D#-9':     { frets: [-1, 6, 5, 6, 6, 6], fingers: [0, 2, 1, 3, 3, 3] },
 
   // ── F# ──
   'F#-major': { frets: [2, 4, 4, 3, 2, 2], fingers: [1, 3, 3, 2, 1, 1] },
@@ -226,9 +237,12 @@ export const CHORD_VOICINGS: Record<string, ChordVoicing> = {
   'F#-dim':   { frets: [2, 3, 4, 2, -1, -1], fingers: [1, 2, 3, 1, 0, 0] },
   'F#-aug':   { frets: [2, 5, 4, 3, 3, 2], fingers: [1, 4, 3, 2, 2, 1] },
   'F#-sus4':  { frets: [2, 4, 4, 4, 2, 2], fingers: [1, 2, 2, 2, 1, 1] },
-  'F#-sus2':  { frets: [2, 4, 6, 3, 2, 2], fingers: [1, 3, 4, 2, 1, 1] },
+  'F#-sus2':  { frets: [2, 4, 6, 6, 2, 2], fingers: [1, 3, 4, 4, 1, 1] },
   'F#-dim7':  { frets: [2, 3, 4, 2, 4, 2], fingers: [1, 2, 3, 1, 3, 1] },
-  'F#-m7b5':  { frets: [2, 3, 2, 2, 2, 2], fingers: [1, 2, 1, 1, 1, 1] },
+  'F#-m7b5':  { frets: [2, 3, 2, 2, -1, -1], fingers: [1, 2, 1, 1, 0, 0] },
+  'F#-7sus4': { frets: [2, 4, 2, 4, 2, 2], fingers: [1, 3, 1, 3, 1, 1] },
+  'F#-add9':  { frets: [2, 4, 6, 3, 2, 2], fingers: [1, 3, 4, 2, 1, 1] },
+  'F#-9':     { frets: [2, 4, 2, 3, 2, 4], fingers: [1, 3, 1, 2, 1, 3] },
 
   // ── G# ──
   'G#-major': { frets: [4, 6, 6, 5, 4, 4], fingers: [1, 3, 3, 2, 1, 1] },
@@ -239,9 +253,12 @@ export const CHORD_VOICINGS: Record<string, ChordVoicing> = {
   'G#-dim':   { frets: [4, 5, 6, 4, -1, -1], fingers: [1, 2, 3, 1, 0, 0] },
   'G#-aug':   { frets: [4, 7, 6, 5, 5, 4], fingers: [1, 4, 3, 2, 2, 1] },
   'G#-sus4':  { frets: [4, 6, 6, 6, 4, 4], fingers: [1, 2, 2, 2, 1, 1] },
-  'G#-sus2':  { frets: [4, 6, 8, 5, 4, 4], fingers: [1, 3, 4, 2, 1, 1] },
+  'G#-sus2':  { frets: [4, 6, 8, 8, 4, 4], fingers: [1, 3, 4, 4, 1, 1] },
   'G#-dim7':  { frets: [4, 5, 6, 4, 6, 4], fingers: [1, 2, 3, 1, 3, 1] },
-  'G#-m7b5':  { frets: [4, 5, 4, 4, 4, 4], fingers: [1, 2, 1, 1, 1, 1] },
+  'G#-m7b5':  { frets: [4, 5, 4, 4, -1, -1], fingers: [1, 2, 1, 1, 0, 0] },
+  'G#-7sus4': { frets: [4, 6, 4, 6, 4, 4], fingers: [1, 3, 1, 3, 1, 1] },
+  'G#-add9':  { frets: [4, 6, 8, 5, 4, 4], fingers: [1, 3, 4, 2, 1, 1] },
+  'G#-9':     { frets: [4, 6, 4, 5, 4, 6], fingers: [1, 3, 1, 2, 1, 3] },
 
   // ── A# ──
   'A#-major': { frets: [-1, 1, 3, 3, 3, 1], fingers: [0, 1, 2, 2, 2, 1] },
@@ -254,5 +271,8 @@ export const CHORD_VOICINGS: Record<string, ChordVoicing> = {
   'A#-sus4':  { frets: [-1, 1, 3, 3, 4, 1], fingers: [0, 1, 2, 2, 3, 1] },
   'A#-sus2':  { frets: [-1, 1, 3, 3, 1, 1], fingers: [0, 1, 2, 2, 1, 1] },
   'A#-dim7':  { frets: [-1, 1, 2, 3, 2, 3], fingers: [0, 1, 2, 3, 2, 3] },
-  'A#-m7b5':  { frets: [-1, 1, 2, 1, 2, 1], fingers: [0, 1, 2, 1, 2, 1] },
+  'A#-m7b5':  { frets: [-1, 1, 2, 1, 2, -1], fingers: [0, 1, 2, 1, 3, 0] },
+  'A#-7sus4': { frets: [-1, 1, 3, 1, 4, 1], fingers: [0, 1, 3, 1, 4, 1] },
+  'A#-add9':  { frets: [-1, 1, 3, 5, 3, 1], fingers: [0, 1, 3, 4, 3, 1] },
+  'A#-9':     { frets: [-1, 1, 0, 1, 1, 1], fingers: [0, 2, 0, 3, 3, 3] },
 };

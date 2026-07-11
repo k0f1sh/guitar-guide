@@ -21,7 +21,7 @@ This is a React + TypeScript SPA built with Vite and Tailwind CSS v4. It is depl
 
 ### Data layer (`src/data/`)
 
-- `notes.ts` — chromatic note names (C, C#, … B), standard guitar tuning (6→1 string order: E B G D A E), fret constants and position markers
+- `notes.ts` — chromatic pitch classes (C, C#, … B), standard guitar tuning (1→6 string order: E B G D A E), fret constants and position markers
 - `scales.ts` — scale definitions as `{ name, intervals }` where `intervals` is a semitone array from root (e.g. major = `[0,2,4,5,7,9,11]`)
 - `chords.ts` — two data structures:
   - `CHORD_VOICINGS`: flat lookup keyed `"root-suffix"` (e.g. `"C-major"`) for direct open/barre chord shapes
@@ -31,7 +31,7 @@ This is a React + TypeScript SPA built with Vite and Tailwind CSS v4. It is depl
 
 Core musical computations:
 - `getScaleNotes(root, intervals)` → array of `NoteName`
-- `getFretboardNotes()` → 6×23 matrix of notes for the full fretboard
+- `getFretboardNotes()` → 6×25 matrix of notes (open string through fret 24)
 - `getDiatonicChords(root, intervals)` → triads derived from a 7-note scale (returns empty array for pentatonic/blues scales)
 - `transposeCagedForm(form, chordType, targetRoot)` → shifts a CAGED base shape by semitone offset to produce a `ChordVoicing`; returns `null` if that form+type combination isn't in `CAGED_SHAPES`
 - `getDegreeName(root, note)` → interval label (R, b2, 2, … 7) for the degree label mode

@@ -1,8 +1,8 @@
-import { CHORD_VOICINGS } from '../data/chords';
+import { CHORD_TYPES, CHORD_VOICINGS } from '../data/chords';
 import type { CagedForm } from '../data/chords';
 import { STANDARD_TUNING, type NoteName } from '../data/notes';
 import type { NoteLabel } from '../utils/music';
-import { transposeCagedForm, getNoteAtFret, getNoteIndex, getDegreeName } from '../utils/music';
+import { transposeCagedForm, getNoteAtFret, getNoteIndex, getScaleNotes, getSpellingMap, getContextDegreeName } from '../utils/music';
 import Fretboard from './Fretboard';
 
 function getChordNotesSorted(frets: number[], root: NoteName): NoteName[] {
@@ -16,8 +16,10 @@ function getChordNotesSorted(frets: number[], root: NoteName): NoteName[] {
   return unique;
 }
 
-export function ChordNotes({ frets, root }: { frets: number[]; root: NoteName }) {
+export function ChordNotes({ frets, root, chordType }: { frets: number[]; root: NoteName; chordType: string }) {
   const notes = getChordNotesSorted(frets, root);
+  const definition = CHORD_TYPES.find((type) => type.suffix === chordType);
+  const spellings = definition ? getSpellingMap(root, definition.intervals, definition.degrees) : new Map<NoteName, string>();
   return (
     <div className="flex flex-wrap items-center gap-2">
       <span className="text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider">構成音</span>
@@ -26,8 +28,10 @@ export function ChordNotes({ frets, root }: { frets: number[]; root: NoteName })
           key={note}
           className={`flex flex-col items-center px-3 py-1.5 rounded-lg ${note === root ? 'bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}
         >
-          <span className="font-extrabold text-base leading-tight">{note}</span>
-          <span className="text-xs font-bold opacity-60">{getDegreeName(root, note)}</span>
+          <span className="font-extrabold text-base leading-tight">{spellings.get(note) ?? note}</span>
+          <span className="text-xs font-bold opacity-60">
+            {definition ? getContextDegreeName(root, note, definition.intervals, definition.degrees) : ''}
+          </span>
         </div>
       ))}
     </div>
@@ -42,6 +46,11 @@ interface ChordDiagramProps {
 }
 
 export default function ChordDiagram({ root, chordType, labelMode, cagedForm }: ChordDiagramProps) {
+  const definition = CHORD_TYPES.find((type) => type.suffix === chordType);
+  const displayNotes = definition ? getSpellingMap(root, definition.intervals, definition.degrees) : undefined;
+  const displayDegrees = definition
+    ? new Map(getScaleNotes(root, definition.intervals).map((note) => [note, getContextDegreeName(root, note, definition.intervals, definition.degrees)]))
+    : undefined;
   // CAGED モード: フォーム + コードタイプを組み合わせて移調
   if (cagedForm) {
     const voicing = transposeCagedForm(cagedForm, chordType, root);
@@ -53,6 +62,8 @@ export default function ChordDiagram({ root, chordType, labelMode, cagedForm }: 
             highlightedNotes={[]}
             mode="chord"
             labelMode={labelMode}
+            displayNotes={displayNotes}
+            displayDegrees={displayDegrees}
           />
           <div className="absolute inset-0 flex items-center justify-center bg-white/60 dark:bg-slate-800/60 rounded-xl">
             <div className="inline-flex items-center gap-2 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-700 rounded-xl px-5 py-3 text-sm font-medium shadow">
@@ -73,6 +84,8 @@ export default function ChordDiagram({ root, chordType, labelMode, cagedForm }: 
         labelMode={labelMode}
         chordFrets={voicing.frets}
         chordFingers={voicing.fingers}
+        displayNotes={displayNotes}
+        displayDegrees={displayDegrees}
       />
     );
   }
@@ -102,6 +115,8 @@ export default function ChordDiagram({ root, chordType, labelMode, cagedForm }: 
       labelMode={labelMode}
       chordFrets={voicing.frets}
       chordFingers={voicing.fingers}
+      displayNotes={displayNotes}
+      displayDegrees={displayDegrees}
     />
   );
 }

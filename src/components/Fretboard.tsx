@@ -11,6 +11,8 @@ interface FretboardProps {
   labelMode: NoteLabel;
   chordFrets?: number[];
   chordFingers?: number[];
+  displayNotes?: Map<NoteName, string>;
+  displayDegrees?: Map<NoteName, string>;
 }
 
 const PADDING_LEFT = 40;
@@ -41,6 +43,8 @@ export default function Fretboard({
   labelMode,
   chordFrets,
   chordFingers,
+  displayNotes,
+  displayDegrees,
 }: FretboardProps) {
   // コードデータは6弦→1弦の順、描画は1弦(上)→6弦(下)なので反転
   const displayChordFrets = chordFrets ? [...chordFrets].reverse() : undefined;
@@ -267,6 +271,8 @@ export default function Fretboard({
                 isChordNote
                 finger={displayChordFingers?.[stringIdx]}
                 labelMode={labelMode}
+                displayNote={displayNotes?.get(note)}
+                displayDegree={displayDegrees?.get(note)}
               />
             );
           }
@@ -282,6 +288,8 @@ export default function Fretboard({
               isRoot={isRoot}
               isHighlighted={isHighlighted}
               labelMode={labelMode}
+              displayNote={displayNotes?.get(note)}
+              displayDegree={displayDegrees?.get(note)}
             />
           );
         }),

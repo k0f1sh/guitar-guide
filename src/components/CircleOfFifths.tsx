@@ -1,26 +1,33 @@
 import { useState } from 'react';
 import type { NoteName } from '../data/notes';
 
-const CIRCLE_ORDER: NoteName[] = ['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#', 'G#', 'D#', 'A#', 'F'];
+export type CircleQuality = 'major' | 'minor';
 
-const KEY_SIGNATURES: Record<string, string> = {
-  C: '', G: '1♯', D: '2♯', A: '3♯', E: '4♯', B: '5♯',
-  'F#': '6♯', 'C#': '7♯', 'G#': '4♭', 'D#': '3♭', 'A#': '2♭', F: '1♭',
-};
-
-const RELATIVE_MINORS: Record<string, string> = {
-  C: 'Am', G: 'Em', D: 'Bm', A: 'F♯m', E: 'C♯m', B: 'G♯m',
-  'F#': 'D♯m', 'C#': 'A♯m', 'G#': 'Fm', 'D#': 'Cm', 'A#': 'Gm', F: 'Dm',
-};
-
-const RELATIVE_MINOR_ROOTS: Record<string, NoteName> = {
-  C: 'A', G: 'E', D: 'B', A: 'F#', E: 'C#', B: 'G#',
-  'F#': 'D#', 'C#': 'A#', 'G#': 'F', 'D#': 'C', 'A#': 'G', F: 'D',
-};
+const CIRCLE_KEYS: Array<{
+  root: NoteName;
+  label: string;
+  signature: string;
+  relativeRoot: NoteName;
+  relativeLabel: string;
+}> = [
+  { root: 'C', label: 'C', signature: '♮', relativeRoot: 'A', relativeLabel: 'Am' },
+  { root: 'G', label: 'G', signature: '1♯', relativeRoot: 'E', relativeLabel: 'Em' },
+  { root: 'D', label: 'D', signature: '2♯', relativeRoot: 'B', relativeLabel: 'Bm' },
+  { root: 'A', label: 'A', signature: '3♯', relativeRoot: 'F#', relativeLabel: 'F♯m' },
+  { root: 'E', label: 'E', signature: '4♯', relativeRoot: 'C#', relativeLabel: 'C♯m' },
+  { root: 'B', label: 'B', signature: '5♯', relativeRoot: 'G#', relativeLabel: 'G♯m' },
+  { root: 'F#', label: 'F♯', signature: '6♯', relativeRoot: 'D#', relativeLabel: 'D♯m' },
+  { root: 'C#', label: 'D♭', signature: '5♭', relativeRoot: 'A#', relativeLabel: 'B♭m' },
+  { root: 'G#', label: 'A♭', signature: '4♭', relativeRoot: 'F', relativeLabel: 'Fm' },
+  { root: 'D#', label: 'E♭', signature: '3♭', relativeRoot: 'C', relativeLabel: 'Cm' },
+  { root: 'A#', label: 'B♭', signature: '2♭', relativeRoot: 'G', relativeLabel: 'Gm' },
+  { root: 'F', label: 'F', signature: '1♭', relativeRoot: 'D', relativeLabel: 'Dm' },
+];
 
 interface CircleOfFifthsProps {
   root: NoteName;
-  onRootChange?: (note: NoteName) => void;
+  quality: CircleQuality | null;
+  onSelect?: (note: NoteName, quality: CircleQuality) => void;
 }
 
 function polarToCartesian(cx: number, cy: number, r: number, angleDeg: number) {
@@ -43,10 +50,18 @@ function sectorPath(cx: number, cy: number, outerR: number, innerR: number, star
   ].join(' ');
 }
 
-export default function CircleOfFifths({ root, onRootChange }: CircleOfFifthsProps) {
+export default function CircleOfFifths({ root, quality, onSelect }: CircleOfFifthsProps) {
   const [hoveredMajor, setHoveredMajor] = useState<NoteName | null>(null);
   const [hoveredMinor, setHoveredMinor] = useState<string | null>(null);
-  const interactive = !!onRootChange;
+  const interactive = !!onSelect;
+  const selectedKey = quality === 'major'
+    ? CIRCLE_KEYS.find((key) => key.root === root)
+    : quality === 'minor'
+      ? CIRCLE_KEYS.find((key) => key.relativeRoot === root)
+      : undefined;
+  const centerLabel = quality === 'minor'
+    ? selectedKey?.relativeLabel.replace(/m$/, '') ?? root
+    : selectedKey?.label ?? root;
 
   const cx = 100, cy = 100;
   const outerR = 92;
@@ -58,7 +73,8 @@ export default function CircleOfFifths({ root, onRootChange }: CircleOfFifthsPro
 
   return (
     <svg viewBox="0 0 200 200" className="w-full max-w-[330px] mx-auto select-none">
-      {CIRCLE_ORDER.map((note, i) => {
+      {CIRCLE_KEYS.map((keyInfo, i) => {
+        const note = keyInfo.root;
         const startDeg = -105 + i * 30;
         const endDeg = -105 + (i + 1) * 30;
         const midDeg = startDeg + 15;
@@ -66,9 +82,9 @@ export default function CircleOfFifths({ root, onRootChange }: CircleOfFifthsPro
         const sigPos = polarToCartesian(cx, cy, sigR, midDeg);
         const minorPos = polarToCartesian(cx, cy, minorNoteR, midDeg);
 
-        const isMajorSelected = note === root;
+        const isMajorSelected = quality === 'major' && note === root;
         const isMajorHovered = interactive && note === hoveredMajor;
-        const isMinorSelected = RELATIVE_MINOR_ROOTS[note] === root;
+        const isMinorSelected = quality === 'minor' && keyInfo.relativeRoot === root;
         const isMinorHovered = interactive && hoveredMinor === note;
 
         let majorFill = 'var(--cof-major-default)';
@@ -83,23 +99,35 @@ export default function CircleOfFifths({ root, onRootChange }: CircleOfFifthsPro
           <g key={note}>
             {/* Major ring sector */}
             <path
+              role="button"
+              tabIndex={interactive ? 0 : -1}
+              aria-label={`${keyInfo.label}メジャーを選択`}
               d={sectorPath(cx, cy, outerR, midR, startDeg, endDeg)}
               fill={majorFill}
               stroke="var(--cof-stroke)"
               strokeWidth="2"
               style={{ cursor: interactive ? 'pointer' : 'default' }}
-              onClick={interactive ? () => onRootChange!(note) : undefined}
+              onClick={interactive ? () => onSelect!(note, 'major') : undefined}
+              onKeyDown={interactive ? (event) => {
+                if (event.key === 'Enter' || event.key === ' ') onSelect!(note, 'major');
+              } : undefined}
               onMouseEnter={interactive ? () => setHoveredMajor(note) : undefined}
               onMouseLeave={interactive ? () => setHoveredMajor(null) : undefined}
             />
             {/* Minor ring sector */}
             <path
+              role="button"
+              tabIndex={interactive ? 0 : -1}
+              aria-label={`${keyInfo.relativeLabel}を選択`}
               d={sectorPath(cx, cy, midR, minorInnerR, startDeg, endDeg)}
               fill={minorFill}
               stroke="var(--cof-stroke)"
               strokeWidth="2"
               style={{ cursor: interactive ? 'pointer' : 'default' }}
-              onClick={interactive ? () => onRootChange!(RELATIVE_MINOR_ROOTS[note]) : undefined}
+              onClick={interactive ? () => onSelect!(keyInfo.relativeRoot, 'minor') : undefined}
+              onKeyDown={interactive ? (event) => {
+                if (event.key === 'Enter' || event.key === ' ') onSelect!(keyInfo.relativeRoot, 'minor');
+              } : undefined}
               onMouseEnter={interactive ? () => setHoveredMinor(note) : undefined}
               onMouseLeave={interactive ? () => setHoveredMinor(null) : undefined}
             />
@@ -115,10 +143,10 @@ export default function CircleOfFifths({ root, onRootChange }: CircleOfFifthsPro
               fill={isMajorSelected ? 'var(--cof-text-major-sel)' : 'var(--cof-text-major)'}
               style={{ pointerEvents: 'none' }}
             >
-              {note}
+              {keyInfo.label}
             </text>
             {/* Major key signature */}
-            {KEY_SIGNATURES[note] && (
+            {keyInfo.signature !== '♮' && (
               <text
                 x={sigPos.x}
                 y={sigPos.y}
@@ -128,7 +156,7 @@ export default function CircleOfFifths({ root, onRootChange }: CircleOfFifthsPro
                 fill={isMajorSelected ? 'var(--cof-text-sig-sel)' : 'var(--cof-text-sig)'}
                 style={{ pointerEvents: 'none' }}
               >
-                {KEY_SIGNATURES[note]}
+                {keyInfo.signature}
               </text>
             )}
             {/* Relative minor label */}
@@ -142,7 +170,7 @@ export default function CircleOfFifths({ root, onRootChange }: CircleOfFifthsPro
               fill={isMinorSelected ? 'var(--cof-text-minor-sel)' : 'var(--cof-text-minor)'}
               style={{ pointerEvents: 'none' }}
             >
-              {RELATIVE_MINORS[note]}
+              {keyInfo.relativeLabel}
             </text>
           </g>
         );
@@ -160,7 +188,7 @@ export default function CircleOfFifths({ root, onRootChange }: CircleOfFifthsPro
         fill="var(--cof-center-root)"
         style={{ pointerEvents: 'none' }}
       >
-        {root}
+        {centerLabel}
       </text>
       <text
         x={cx}
@@ -171,7 +199,7 @@ export default function CircleOfFifths({ root, onRootChange }: CircleOfFifthsPro
         fill="var(--cof-center-sig)"
         style={{ pointerEvents: 'none' }}
       >
-        {KEY_SIGNATURES[root] || '♮'}
+        {selectedKey?.signature ?? '—'}
       </text>
     </svg>
   );
