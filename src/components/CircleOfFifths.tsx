@@ -62,6 +62,11 @@ export default function CircleOfFifths({ root, quality, onSelect }: CircleOfFift
   const centerLabel = quality === 'minor'
     ? selectedKey?.relativeLabel.replace(/m$/, '') ?? root
     : selectedKey?.label ?? root;
+  const selectedIndex = quality === 'major'
+    ? CIRCLE_KEYS.findIndex((key) => key.root === root)
+    : quality === 'minor'
+      ? CIRCLE_KEYS.findIndex((key) => key.relativeRoot === root)
+      : -1;
 
   const cx = 100, cy = 100;
   const outerR = 92;
@@ -201,6 +206,27 @@ export default function CircleOfFifths({ root, quality, onSelect }: CircleOfFift
       >
         {selectedKey?.signature ?? '—'}
       </text>
+
+      {/* Draw the selected outline last so adjacent sectors cannot cover it. */}
+      {selectedIndex >= 0 && quality && (
+        <path
+          d={sectorPath(
+            cx,
+            cy,
+            quality === 'major' ? outerR : midR,
+            quality === 'major' ? midR : minorInnerR,
+            -105 + selectedIndex * 30,
+            -105 + (selectedIndex + 1) * 30,
+          )}
+          fill="none"
+          stroke={quality === 'major'
+            ? 'var(--cof-major-selected-stroke)'
+            : 'var(--cof-minor-selected-stroke)'}
+          strokeWidth="3.5"
+          strokeLinejoin="round"
+          pointerEvents="none"
+        />
+      )}
     </svg>
   );
 }

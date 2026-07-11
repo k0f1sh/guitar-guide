@@ -71,6 +71,8 @@ body {
   --cof-minor-default: #EEF2FF;
   --cof-minor-hover: #E0E7FF;
   --cof-stroke: white;
+  --cof-major-selected-stroke: #e11d48;
+  --cof-minor-selected-stroke: #4f46e5;
   --cof-text-major: #334155;
   --cof-text-major-sel: #9f1239;
   --cof-text-sig: #64748b;
@@ -90,6 +92,8 @@ body {
   --cof-minor-default: #312e81;
   --cof-minor-hover: #3730a3;
   --cof-stroke: #0f172a;
+  --cof-major-selected-stroke: #fb7185;
+  --cof-minor-selected-stroke: #a5b4fc;
   --cof-text-major: #e2e8f0;
   --cof-text-major-sel: #9f1239;
   --cof-text-sig: #94a3b8;
