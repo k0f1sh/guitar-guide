@@ -104,6 +104,7 @@ export default function CircleOfFifths({ root, quality, onSelect }: CircleOfFift
           <g key={note}>
             {/* Major ring sector */}
             <path
+              className="cof-sector"
               role="button"
               tabIndex={interactive ? 0 : -1}
               aria-label={`${keyInfo.label}メジャーを選択`}
@@ -121,6 +122,7 @@ export default function CircleOfFifths({ root, quality, onSelect }: CircleOfFift
             />
             {/* Minor ring sector */}
             <path
+              className="cof-sector"
               role="button"
               tabIndex={interactive ? 0 : -1}
               aria-label={`${keyInfo.relativeLabel}を選択`}

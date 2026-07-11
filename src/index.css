@@ -73,6 +73,7 @@ body {
   --cof-stroke: white;
   --cof-major-selected-stroke: #e11d48;
   --cof-minor-selected-stroke: #4f46e5;
+  --cof-focus-stroke: #6366f1;
   --cof-text-major: #334155;
   --cof-text-major-sel: #9f1239;
   --cof-text-sig: #64748b;
@@ -85,6 +86,16 @@ body {
   --cof-center-sig: #64748b;
 }
 
+/* Replace the browser's rectangular SVG focus outline with a sector-shaped one. */
+.cof-sector:focus {
+  outline: none;
+}
+
+.cof-sector:focus-visible {
+  stroke: var(--cof-focus-stroke);
+  stroke-width: 3px;
+}
+
 /* Circle of Fifths: dark mode */
 .dark {
   --cof-major-default: #475569;
@@ -94,6 +105,7 @@ body {
   --cof-stroke: #0f172a;
   --cof-major-selected-stroke: #fb7185;
   --cof-minor-selected-stroke: #a5b4fc;
+  --cof-focus-stroke: #c4b5fd;
   --cof-text-major: #e2e8f0;
   --cof-text-major-sel: #9f1239;
   --cof-text-sig: #94a3b8;
